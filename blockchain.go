@@ -12,17 +12,23 @@ import (
 )
 
 // Transaction represents a blockchain transaction
+//type Transaction struct {
+//	From   string  `json:"from"`
+//	To     string  `json:"to"`
+//	Amount float64 `json:"amount"`
+//}
+
 type Transaction struct {
-	From   string  `json:"from"`
-	To     string  `json:"to"`
-	Amount float64 `json:"amount"`
+	Certificate string `json:"certificate"`
+	Owner       string `json:"owner"`
+	IsActive    bool   `json:"isactive"`
 }
 
 // Block represents each 'item' in the blockchain
 type Block struct {
 	Transactions []Transaction
-	Hash         string
 	PreviousHash string
+	Hash         string
 	Timestamp    time.Time
 	PoW          int
 }
@@ -135,10 +141,11 @@ func main() {
 	// Add a new transaction
 	app.Post("/transactions/new", func(c *fiber.Ctx) error {
 		var transaction Transaction
+		transaction.IsActive = true
 		if err := c.BodyParser(&transaction); err != nil {
 			return c.Status(fiber.StatusBadRequest).SendString("Invalid input")
 		}
-		if transaction.From == "" || transaction.To == "" || transaction.Amount <= 0 {
+		if transaction.Certificate == "" || transaction.Owner == "" {
 			return c.Status(fiber.StatusBadRequest).SendString("Missing transaction data")
 		}
 
