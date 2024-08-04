@@ -21,6 +21,8 @@ body
 ```
 
 ## Go Blockchain
+- Server Port: 7000
+
 GET /certificate?name=base64-encoded-string
 response
 ```javascript
