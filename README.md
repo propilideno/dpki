@@ -1,4 +1,4 @@
-### PHP Mimic DNS Server
+## PHP Mimic DNS Server
 - Server Port: 9000
 
 #### GET /_acme-challenge/?domain_name=propi.dev
@@ -20,6 +20,31 @@ body
 }
 ```
 
-## Notes
+## Go Blockchain
+GET /certificate?name=base64-encoded-string
+response
+```javascript
+{
+    "status": bool //active or inactive
+    "issued_at": datetime //iso 8601 format
+    "expiration": datetime //iso 8601 format
+    "revoke_token": string
+}
+```
+POST /certificate/new
+```javascript
+{
+    "certificate": string, //base64 encoded certificate
+}
+```
+POST /certificate/revoke
+```javascript
+{
+    "certificate": string, //base64encoded
+    "encrypted_revoke_token": string //encrypt revoke_token with your private key
+}
+```
+
+### Notes
 - RFC 8855 is a subdomain _acme-challenge.domain.com we'll mimic as a route /_acme-challenge
 > https://datatracker.ietf.org/doc/html/rfc8555/#section-8.4
