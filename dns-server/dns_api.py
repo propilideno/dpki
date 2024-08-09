@@ -1,4 +1,3 @@
-from flask import Flask
 from dotenv import load_dotenv
 import os
 from src.helpers.utils import str2bool
