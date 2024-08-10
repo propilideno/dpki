@@ -54,6 +54,6 @@ class GuzzleClient extends Client
 
     public function responseToArray(ResponseInterface $response): array
     {
-        return json_decode($response->getBody()->getContents()) ?? [];
+        return json_decode($response->getBody()->getContents(), true) ?? [];
     }
 }
