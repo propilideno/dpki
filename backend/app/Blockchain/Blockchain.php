@@ -36,4 +36,29 @@ class Blockchain
 
         return $instance->client->responseToArray($response);
     }
+
+    /**
+     * @throws \Throwable
+     */
+    public static function chain(): array
+    {
+        $instance = self::getInstance();
+        $response = $instance->client->get('chain');
+
+        return $instance->client->responseToArray($response);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public static function newTransaction(array $data): array
+    {
+        $instance = self::getInstance();
+
+        $response = $instance->client->post('transactions/new', [
+            'form_params' => $data,
+        ]);
+
+        return $instance->client->responseToArray($response);
+    }
 }
