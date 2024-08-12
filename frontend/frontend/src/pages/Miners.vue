@@ -28,39 +28,34 @@
 import { useQuasar } from 'quasar'
 
 export default {
-  name: 'HomePage',
+  name: 'DPKICertificate',
 }
 </script>
 
 <script setup>
-import RegisterCertificateDialog from 'src/components/certificate_manager/RegisterCertificateDialog.vue'
+import NewCertificateDialog from 'src/components/certificate_manager/RegisterCertificateDialog.vue'
 
 const $q = useQuasar()
 
 const myFunction = () => {
   $q.dialog({
-    component: RegisterCertificateDialog
+    component: NewCertificateDialog
   })
 }
 
 const actions = [
   {
-    label: 'Generate Certificate',
+    label: 'Mine Block',
     icon: 'edit',
     onClick: myFunction
   },
   {
-    label: 'Acme Challenge',
+    label: 'Mine Transactions',
     icon: 'edit',
     onClick: myFunction
   },
   {
-    label: 'Miner',
-    icon: 'edit',
-    onClick: myFunction
-  },
-  {
-    label: 'Certificate',
+    label: 'Mine Contract',
     icon: 'edit',
     onClick: myFunction
   },

@@ -1,4 +1,4 @@
-# DKPI (frontend)
+# DPKI (frontend)
 
 A Quasar Project
 

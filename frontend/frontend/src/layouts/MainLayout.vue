@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh LpR fFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -12,10 +12,8 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Descentralized Public Key Infrastructure
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -25,17 +23,29 @@
       bordered
     >
       <q-list>
-        <q-item-label
-          header
+        <q-tabs
+          indicator-color="transparent"
+          active-class="active-item"
+          vertical
         >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+          <q-route-tab
+            v-for="link in linksList"
+            :key="link.title"
+            :label="link.title"
+            v-bind="link"
+          >
+            <!-- <q-item>
+              <q-item-section side>
+                <q-icon :name="link.icon" size="md" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>
+                  {{ link.label }}
+                </q-item-label>
+              </q-item-section>
+            </q-item> -->
+          </q-route-tab>
+      </q-tabs>
       </q-list>
     </q-drawer>
 
@@ -47,7 +57,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
 
 defineOptions({
   name: 'MainLayout'
@@ -55,47 +64,35 @@ defineOptions({
 
 const linksList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+    title: 'Certificate Helper',
+    caption: 'Generate a self signed certificate and a public/private key pair.',
+    icon: 'key',
+    to: { name: 'DPKI.CertificateHelper' }
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
+    title: 'Wallets',
+    caption: 'Prove that you are yourself to valid your domain.',
+    icon: 'wallet',
+    to: { name: 'DPKI.Wallets' }
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
+    title: 'Miners',
+    caption: 'Mine in Blockchain and get recompenses.',
+    icon: 'construction',
+    to: { name: 'DPKI.Miners' }
   },
   {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
+    title: 'DNS',
+    caption: 'Prove that you are yourself to valid your domain.',
+    icon: 'dns',
+    to: { name: 'DPKI.Dns' }
   },
   {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
+    title: 'Certificate Manager',
+    caption: 'Register, revoke and consult certificates in Blockchain.',
+    icon: 'badge',
+    to: { name: 'DPKI.CertificateManager' }
   },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
 ]
 
 const leftDrawerOpen = ref(false)

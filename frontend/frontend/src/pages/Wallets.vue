@@ -28,7 +28,7 @@
 import { useQuasar } from 'quasar'
 
 export default {
-  name: 'HomePage',
+  name: 'DPKICertificate',
 }
 </script>
 
@@ -45,22 +45,17 @@ const myFunction = () => {
 
 const actions = [
   {
-    label: 'Generate Certificate',
+    label: 'Show Wallet',
     icon: 'edit',
     onClick: myFunction
   },
   {
-    label: 'Acme Challenge',
+    label: 'Transfer Money',
     icon: 'edit',
     onClick: myFunction
   },
   {
-    label: 'Miner',
-    icon: 'edit',
-    onClick: myFunction
-  },
-  {
-    label: 'Certificate',
+    label: 'Get Wallets',
     icon: 'edit',
     onClick: myFunction
   },

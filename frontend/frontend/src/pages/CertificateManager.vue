@@ -28,7 +28,7 @@
 import { useQuasar } from 'quasar'
 
 export default {
-  name: 'HomePage',
+  name: 'DPKICertificateManager',
 }
 </script>
 
@@ -45,22 +45,12 @@ const myFunction = () => {
 
 const actions = [
   {
-    label: 'Generate Certificate',
+    label: 'Register Certificate',
     icon: 'edit',
     onClick: myFunction
   },
   {
-    label: 'Acme Challenge',
-    icon: 'edit',
-    onClick: myFunction
-  },
-  {
-    label: 'Miner',
-    icon: 'edit',
-    onClick: myFunction
-  },
-  {
-    label: 'Certificate',
+    label: 'Check Acme Challenge Situation',
     icon: 'edit',
     onClick: myFunction
   },
