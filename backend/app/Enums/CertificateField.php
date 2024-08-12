@@ -2,8 +2,6 @@
 
 namespace App\Enums;
 
-use Illuminate\Support\Str;
-
 enum CertificateField: string
 {
     case CERTIFICATE = 'certificate';
@@ -27,22 +25,37 @@ enum CertificateField: string
         return strtoupper(str_replace('_', ' ', $this->value));
     }
 
-    public function formatKey(string $key, bool $applyTrim = false): string
+    public function formatKey(string $key): string
     {
-        if ($applyTrim) {
-            $key = preg_replace('/' . $this->beginPem() . '/', '', $key);
-            $key = preg_replace('/' . $this->endPem() . '/', '', $key);
-        }
+        $key = $this->removePemHeaderAndFooter($key);
+        $key = str_replace("\n", '', $key);
+        $key = base64_encode($key);
 
-        return str_replace("\n", '', $key);
+        return $this->beginPem() . $key . $this->endPem();
     }
 
     public function keyToPemFormat(string $key): string
     {
-        $formattedKey = $this->formatKey($key, true);
-        $formattedKey = str_replace(' ', '+', $formattedKey);
+        $formattedKey = $this->removePemHeaderAndFooter($key);
         $formattedKey = wordwrap($formattedKey, 64, "\n", true);
 
-        return$this->beginPem() . "\n" . $formattedKey . "\n" . $this->endPem();
+        return  $this->addPemHeaderAndFooter($formattedKey, true);
+    }
+
+    public function removePemHeaderAndFooter(string $key): string
+    {
+        $key = preg_replace('/' . $this->beginPem() . '/', '', $key);
+        $key = preg_replace('/' . $this->endPem() . '/', '', $key);
+
+        return trim($key);
+    }
+
+    public function addPemHeaderAndFooter(string $key, bool $withEol = false): string
+    {
+        if ($withEol) {
+            $key = "\n" . $key . "\n";
+        }
+
+        return $this->beginPem() . $key . $this->endPem();
     }
 }

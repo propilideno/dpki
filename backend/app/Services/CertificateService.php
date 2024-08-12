@@ -6,7 +6,7 @@ use App\Enums\CertificateField;
 
 class CertificateService
 {
-    public function generateCertificate(bool $applyTrim = false): array
+    public function generateCertificate(): array
     {
         $config = [
             'digest_alg' => 'sha256',
@@ -24,16 +24,21 @@ class CertificateService
         openssl_x509_export($certificate, $certificateOut);
 
         return [
-            CertificateField::PRIVATE_KEY->value => CertificateField::PRIVATE_KEY->formatKey($privateKeyOut, $applyTrim),
-            CertificateField::PUBLIC_KEY->value => CertificateField::PUBLIC_KEY->formatKey($publicKey, $applyTrim),
-            CertificateField::CERTIFICATE->value => CertificateField::CERTIFICATE->formatKey($certificateOut, $applyTrim),
+            CertificateField::PRIVATE_KEY->value => CertificateField::PRIVATE_KEY->formatKey($privateKeyOut),
+            CertificateField::PUBLIC_KEY->value => CertificateField::PUBLIC_KEY->formatKey($publicKey),
+            CertificateField::CERTIFICATE->value => CertificateField::CERTIFICATE->formatKey($certificateOut),
         ];
     }
 
     public function signMessage(string $message, string $privateKey): string
     {
+        $privateKey = CertificateField::PRIVATE_KEY->removePemHeaderAndFooter($privateKey);
+        $privateKey = base64_decode($privateKey);
+        $privateKey = CertificateField::PRIVATE_KEY->addPemHeaderAndFooter($privateKey);
+
         $privateKeyPem = CertificateField::PRIVATE_KEY->keyToPemFormat($privateKey);
         $privateKeyResource = openssl_pkey_get_private($privateKeyPem);
+
         openssl_sign($message, $signature, $privateKeyResource);
 
         return base64_encode($signature);
