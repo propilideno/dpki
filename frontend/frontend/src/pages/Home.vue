@@ -1,26 +1,6 @@
 <template>
   <q-page class="flex flex-center" padding>
-    <div class="row q-col-gutter-lg full-width">
-      <div
-        v-for="action, index in actions"
-        :key="index"
-        class="col"
-      >
-        <q-btn
-          @click="action.onClick"
-          :label="action.label"
-          :icon="action.icon"
-          stack
-          size="3em"
-          padding="xl"
-          style="border-radius: 16px;"
-          no-caps
-          class="fit"
-          color="grey-1"
-          text-color="black"
-        />
-      </div>
-    </div>
+    <h1>Home</h1>
   </q-page>
 </template>
 
@@ -33,37 +13,5 @@ export default {
 </script>
 
 <script setup>
-import RegisterCertificateDialog from 'src/components/certificate_manager/RegisterCertificateDialog.vue'
-
-const $q = useQuasar()
-
-const myFunction = () => {
-  $q.dialog({
-    component: RegisterCertificateDialog
-  })
-}
-
-const actions = [
-  {
-    label: 'Generate Certificate',
-    icon: 'edit',
-    onClick: myFunction
-  },
-  {
-    label: 'Acme Challenge',
-    icon: 'edit',
-    onClick: myFunction
-  },
-  {
-    label: 'Miner',
-    icon: 'edit',
-    onClick: myFunction
-  },
-  {
-    label: 'Certificate',
-    icon: 'edit',
-    onClick: myFunction
-  },
-]
 
 </script>

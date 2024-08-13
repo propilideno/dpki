@@ -64,6 +64,12 @@ defineOptions({
 
 const linksList = [
   {
+    title: 'Home',
+    caption: 'Generate a self signed certificate and a public/private key pair.',
+    icon: 'key',
+    to: { name: 'DPKI.Home' }
+  },
+  {
     title: 'Certificate Helper',
     caption: 'Generate a self signed certificate and a public/private key pair.',
     icon: 'key',

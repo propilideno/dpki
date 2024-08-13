@@ -5,6 +5,7 @@ const routes = [
     children: [
       {
         path: '',
+        name: 'DPKI.Home',
         component: () => import('pages/Home.vue')
       },
       {
