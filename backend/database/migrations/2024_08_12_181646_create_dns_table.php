@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('domain')->unique();
             $table->string('txt')->nullable();
+            $table->string('shared_key', 512)->unique();
             $table->timestamps();
         });
     }

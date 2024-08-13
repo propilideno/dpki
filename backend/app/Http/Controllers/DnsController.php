@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ClearDnsTxtRequest;
 use App\Http\Requests\StoreDnsRequest;
 use App\Repositories\Interfaces\DnsRepositoryInterface;
+use App\Services\DnsService;
 use Illuminate\Http\JsonResponse;
 
 class DnsController extends Controller
 {
-    public function __construct(private readonly DnsRepositoryInterface $dnsRepository)
+    public function __construct(
+        private readonly DnsService $dnsService,
+        private readonly DnsRepositoryInterface $dnsRepository,
+    )
     {
         //
     }
@@ -18,16 +21,12 @@ class DnsController extends Controller
     {
         $attributes = $request->validated();
 
-        $matchAttributes = [
-            'domain' => $attributes['domain'],
-        ];
-
         return response()->json(
-            $this->dnsRepository->updateOrCreate($matchAttributes, $attributes)
+            $this->dnsService->updateOrCreate($attributes)
         );
     }
 
-    public function clearDnsTXT(ClearDnsTxtRequest $request, string $domain): JsonResponse
+    public function clearDnsTxt(string $domain): JsonResponse
     {
         $dns = $this->dnsRepository->findBy([
             'domain' => $domain,

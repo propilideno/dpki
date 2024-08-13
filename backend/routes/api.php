@@ -6,7 +6,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/certificate/new', [CertificateController::class, 'generateCertificate']);
 Route::get('/sign', [CertificateController::class, 'signMessage']);
+Route::get('/hash', [CertificateController::class, 'hash']);
 
-Route::post('/dns', [DnsController::class, 'create']);
-Route::patch('/dns/{domain}/clear-txt', [DnsController::class, 'clearDnsTXT']);
 Route::get('/dns/{domain}', [DnsController::class, 'show']);
+
+Route::middleware('hmac_auth')->group(function ()
+{
+    Route::post('/dns', [DnsController::class, 'create']);
+    Route::patch('/dns/{domain}/clear-txt', [DnsController::class, 'clearDnsTxt']);
+});

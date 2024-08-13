@@ -17,5 +17,11 @@ class Dns extends Model
     protected $fillable = [
         'domain',
         'txt',
+        'shared_key',
+        'shared_word',
+    ];
+
+    protected $hidden = [
+        'shared_key',
     ];
 }
