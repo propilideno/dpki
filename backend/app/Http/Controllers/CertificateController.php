@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CertificateRequest;
+use App\Http\Requests\HashRequest;
 use App\Http\Requests\SignRequest;
 use App\Services\CertificateService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CertificateController extends Controller
 {
@@ -27,14 +26,19 @@ class CertificateController extends Controller
         ]);
     }
 
-    public function generateCertificate(CertificateRequest $request): JsonResponse
+    public function generateCertificate(): JsonResponse
+    {
+        return response()->json(
+            $this->certificateService->generateCertificate()
+        );
+    }
+
+    public function hash(HashRequest $request): JsonResponse
     {
         $data = $request->validated();
 
-        $applyTrim = boolval($data['apply_trim'] ?? false);
-
-        return response()->json(
-            $this->certificateService->generateCertificate($applyTrim)
-        );
+        return response()->json([
+            'hash' => base64_encode(hash_hmac('sha256', $data['message'], $data['key'])),
+        ]);
     }
 }

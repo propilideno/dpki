@@ -4,12 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CertificateRequest extends FormRequest
+class HashRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'apply_trim' => ['sometimes', 'nullable', 'boolean'],
+            'message' => ['required', 'string'],
+            'key' => ['required', 'string'],
         ];
     }
 }
