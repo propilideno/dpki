@@ -46,17 +46,17 @@ const myFunction = () => {
 const actions = [
   {
     label: 'Show Wallet',
-    icon: 'edit',
+    icon: 'credit_card',
     onClick: myFunction
   },
   {
     label: 'Transfer Money',
-    icon: 'edit',
+    icon: 'paid',
     onClick: myFunction
   },
   {
     label: 'Get Wallets',
-    icon: 'edit',
+    icon: 'groups',
     onClick: myFunction
   },
 ]

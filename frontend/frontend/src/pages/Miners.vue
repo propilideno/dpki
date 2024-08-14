@@ -46,17 +46,17 @@ const myFunction = () => {
 const actions = [
   {
     label: 'Mine Block',
-    icon: 'edit',
+    icon: 'grade',
     onClick: myFunction
   },
   {
     label: 'Mine Transactions',
-    icon: 'edit',
+    icon: 'attach_money',
     onClick: myFunction
   },
   {
     label: 'Mine Contract',
-    icon: 'edit',
+    icon: 'receipt_long',
     onClick: myFunction
   },
 ]

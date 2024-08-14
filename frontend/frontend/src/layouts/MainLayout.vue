@@ -66,7 +66,7 @@ const linksList = [
   {
     title: 'Home',
     caption: 'Generate a self signed certificate and a public/private key pair.',
-    icon: 'key',
+    icon: 'home',
     to: { name: 'DPKI.Home' }
   },
   {

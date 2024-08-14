@@ -35,6 +35,8 @@ export default {
 <script setup>
 import RegisterCertificateDialog from 'src/components/certificate_manager/RegisterCertificateDialog.vue'
 import GenerateCertificateDialog from 'src/components/certificate_helper/GenerateCertificateDialog.vue';
+import SignMessageDialog from 'src/components/certificate_helper/SignMessageDialog.vue';
+import HashDialog from 'src/components/certificate_helper/HashDialog.vue';
 
 const $q = useQuasar()
 
@@ -44,9 +46,9 @@ const myFunction = () => {
   })
 }
 
-const generateCertificateDialog = () => {
+const openDialog = (component) => {
   $q.dialog({
-    component: GenerateCertificateDialog
+    component: component
   })
 }
 
@@ -54,17 +56,17 @@ const actions = [
   {
     label: 'Generate Certificate',
     icon: 'new_releases',
-    onClick: generateCertificateDialog
+    onClick: () => openDialog(GenerateCertificateDialog)
   },
   {
     label: 'Sign Message',
     icon: 'draw',
-    onClick: myFunction
+    onClick: () => openDialog(SignMessageDialog)
   },
   {
     label: 'Hash',
     icon: 'functions',
-    onClick: myFunction
+    onClick: () => openDialog(HashDialog)
   },
 ]
 

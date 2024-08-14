@@ -46,12 +46,12 @@ const myFunction = () => {
 const actions = [
   {
     label: 'Register Certificate',
-    icon: 'edit',
+    icon: 'verified_user',
     onClick: myFunction
   },
   {
     label: 'Check Acme Challenge Situation',
-    icon: 'edit',
+    icon: 'emoji_events',
     onClick: myFunction
   },
 ]

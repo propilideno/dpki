@@ -33,31 +33,33 @@ export default {
 </script>
 
 <script setup>
-import RegisterCertificateDialog from 'src/components/certificate_manager/RegisterCertificateDialog.vue'
+import RegisterDomainDialog from 'src/components/dns/RegisterDomainDialog.vue';
+import DeleteRegisterDomainDialog from 'src/components/dns/DeleteRegisterDomainDialog.vue';
+import ShowRegisterDomainDialog from 'src/components/dns/ShowRegisterDomainDialog.vue';
 
 const $q = useQuasar()
 
-const myFunction = () => {
+const openDialog = (component) => {
   $q.dialog({
-    component: RegisterCertificateDialog
+    component: component
   })
 }
 
 const actions = [
   {
     label: 'Register Domain',
-    icon: 'edit',
-    onClick: myFunction
+    icon: 'domain_add',
+    onClick: () => openDialog(RegisterDomainDialog)
   },
   {
     label: 'Delete Register Domain',
-    icon: 'edit',
-    onClick: myFunction
+    icon: 'domain_disabled',
+    onClick: () => openDialog(DeleteRegisterDomainDialog)
   },
   {
     label: 'Show Register Domain',
-    icon: 'edit',
-    onClick: myFunction
+    icon: 'domain',
+    onClick: () => openDialog(ShowRegisterDomainDialog)
   },
 ]
 

@@ -44,8 +44,6 @@
               </template>
             </q-input>
           </div>
-          <div class="col-12"></div>
-          <div class="col-12"></div>
         </div>
       </q-card-section>
       <q-card-actions align="right">
