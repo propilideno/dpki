@@ -10,7 +10,7 @@
         <q-card-section class="row no-wrap">
           <div class="full-width-flex">
             <div class="text-h6 text-grey-9 flex items-center full-height">
-              Delete Register Domain
+              Delete Domain
             </div>
           </div>
         </q-card-section>
@@ -19,41 +19,18 @@
           <div class="row q-col-gutter-md">
             <div class="col-12">
               <q-input
-                v-model="hashParams.message"
-                label="Message *"
-                filled
+                @update:model-value="onUpdateDomain"
+                :model-value="domainData.domain"
+                label="Domain *"
+                debounce="1000"
+                :loading="domainLoading"
               />
             </div>
-            <div class="col-12">
+            <div v-if="domainData.exists" class="col-12">
               <q-input
-                v-model="hashParams.key"
-                label="Key *"
-                filled
-                autogrow
+                v-model="domainData.hash"
+                label="Hash *"
               />
-            </div>
-            <div class="col-12">
-              <q-input
-                v-model="hash"
-                label="Hash"
-                autogrow
-                readonly
-                filled
-                input-class="text-caption"
-                >
-                  <template #append>
-                    <q-btn
-                      @click="copyKeyToClipboard(hash)"
-                      icon="content_copy"
-                      size="0.5em"
-                      round
-                    >
-                      <q-tooltip class="text-subtitle2">
-                        Copy Hash
-                      </q-tooltip>
-                    </q-btn>
-                  </template>
-                </q-input>
             </div>
           </div>
         </q-card-section>
@@ -67,8 +44,8 @@
           />
           <q-btn
             type="submit"
-            label="Generate"
-            color="primary"
+            label="Delete"
+            color="negative"
             text-color="white"
             padding="sm md"
             :loading="loading"
@@ -80,14 +57,15 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from 'vue'
-import { useDialogPluginComponent, copyToClipboard, useQuasar } from 'quasar'
+import { defineComponent, ref } from 'vue'
+import { useDialogPluginComponent, useQuasar } from 'quasar'
 import cloneDeep from 'lodash.clonedeep';
 import { api } from 'src/boot/axios';
 
-const DEFAULT_HASH_PARAMS = {
-  message: '',
-  key: '',
+const DEFAULT_DOMAIN_DATA = {
+  domain: '',
+  hash: '',
+  exists: false
 }
 
 export default defineComponent({
@@ -109,40 +87,57 @@ const onCloseDialog = () => {
 
 const $q = useQuasar()
 
-const hash = ref('')
-const hashParams = ref(cloneDeep(DEFAULT_HASH_PARAMS))
+const domainData = ref(cloneDeep(DEFAULT_DOMAIN_DATA))
 const loading = ref(false)
 
-const copyKeyToClipboard = (value) => {
-  copyToClipboard(value)
-    .then(() => {
-      $q.notify({
-        type: 'positive',
-        message: 'Copied!'
-      })
-    })
-    .catch(() => {
-      $q.notify({
-        type: 'alert',
-        message: 'Error on Copy.'
-      })
-    })
+const domainLoading = ref(false)
+const getDomain = async () => {
+  domainData.value.exists = false
+
+  try {
+    domainLoading.value = true
+
+    const { data } = await api.get(`dns/${domainData.value.domain}`)
+
+    domainData.value.exists = true
+
+    Object.assign(domainData.value, data)
+  } finally {
+    domainLoading.value = false
+  }
 }
 
-// TODO: adicionar rules
+const onUpdateDomain = async (newDomain) => {
+  domainData.value.domain = newDomain
+
+  await getDomain()
+}
 
 const onSubmit = async () => {
-  hash.value = ''
-
+  if (!domainData.value.exists) {
+    $q.notify({
+      type: 'negative',
+      message: 'This domain doesn\'t exists.'
+    })
+    return
+  }
   try {
     loading.value = true
 
-    const { data } = await api.get('hash', {
-      params: hashParams.value,
+    await api.patch(`dns/${domainData.value.domain}/clear-txt`, null, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'Application/json',
+        hash: domainData.value.hash,
+      }
     })
 
-    hash.value = data.hash
+    $q.notify({
+      type: 'positive',
+      message: 'TXT from domain sucessfully deleted.'
+    })
 
+    onOKClick()
   } finally {
     loading.value = false
   }

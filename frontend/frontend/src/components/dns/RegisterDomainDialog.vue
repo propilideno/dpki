@@ -19,41 +19,25 @@
           <div class="row q-col-gutter-md">
             <div class="col-12">
               <q-input
-                v-model="hashParams.message"
-                label="Message *"
-                filled
+                @update:model-value="onUpdateDomain"
+                :model-value="domainData.domain"
+                label="Domain *"
+                debounce="1000"
+                :loading="domainLoading"
               />
             </div>
             <div class="col-12">
               <q-input
-                v-model="hashParams.key"
-                label="Key *"
-                filled
-                autogrow
+                v-model="domainData.txt"
+                label="TXT *"
+                :disable="domainLoading"
               />
             </div>
-            <div class="col-12">
+            <div v-if="domainData.exists" class="col-12">
               <q-input
-                v-model="hash"
-                label="Hash"
-                autogrow
-                readonly
-                filled
-                input-class="text-caption"
-                >
-                  <template #append>
-                    <q-btn
-                      @click="copyKeyToClipboard(hash)"
-                      icon="content_copy"
-                      size="0.5em"
-                      round
-                    >
-                      <q-tooltip class="text-subtitle2">
-                        Copy Hash
-                      </q-tooltip>
-                    </q-btn>
-                  </template>
-                </q-input>
+                v-model="domainData.hash"
+                label="Hash *"
+              />
             </div>
           </div>
         </q-card-section>
@@ -67,7 +51,7 @@
           />
           <q-btn
             type="submit"
-            label="Generate"
+            label="Register"
             color="primary"
             text-color="white"
             padding="sm md"
@@ -80,14 +64,17 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from 'vue'
-import { useDialogPluginComponent, copyToClipboard, useQuasar } from 'quasar'
+import { defineComponent, ref } from 'vue'
+import { useDialogPluginComponent, useQuasar } from 'quasar'
 import cloneDeep from 'lodash.clonedeep';
 import { api } from 'src/boot/axios';
+import ShowSharedKey from './ShowSharedKey.vue';
 
-const DEFAULT_HASH_PARAMS = {
-  message: '',
-  key: '',
+const DEFAULT_DOMAIN_DATA = {
+  domain: '',
+  txt: '',
+  hash: '',
+  exists: false
 }
 
 export default defineComponent({
@@ -109,40 +96,59 @@ const onCloseDialog = () => {
 
 const $q = useQuasar()
 
-const hash = ref('')
-const hashParams = ref(cloneDeep(DEFAULT_HASH_PARAMS))
+const domainData = ref(cloneDeep(DEFAULT_DOMAIN_DATA))
 const loading = ref(false)
 
-const copyKeyToClipboard = (value) => {
-  copyToClipboard(value)
-    .then(() => {
-      $q.notify({
-        type: 'positive',
-        message: 'Copied!'
-      })
-    })
-    .catch(() => {
-      $q.notify({
-        type: 'alert',
-        message: 'Error on Copy.'
-      })
-    })
+const domainLoading = ref(false)
+const getDomain = async () => {
+  domainData.value.exists = false
+
+  try {
+    domainLoading.value = true
+
+    const { data } = await api.get(`dns/${domainData.value.domain}`)
+
+    domainData.value.exists = true
+
+    Object.assign(domainData.value, data)
+  } finally {
+    domainLoading.value = false
+  }
 }
 
-// TODO: adicionar rules
+const onUpdateDomain = async (newDomain) => {
+  domainData.value.domain = newDomain
+
+  await getDomain()
+}
 
 const onSubmit = async () => {
-  hash.value = ''
-
   try {
     loading.value = true
 
-    const { data } = await api.get('hash', {
-      params: hashParams.value,
+    const { data } = await api.post('dns', domainData.value, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'Application/json',
+        hash: domainData.value.hash,
+      }
     })
 
-    hash.value = data.hash
+    if (data.shared_key) {
+      $q.dialog({
+        component: ShowSharedKey,
+        componentProps: {
+          sharedKey: data.shared_key
+        }
+      })
+    }
 
+    $q.notify({
+      type: 'positive',
+      message: 'Domain sucessfully registered.'
+    })
+
+    onOKClick()
   } finally {
     loading.value = false
   }

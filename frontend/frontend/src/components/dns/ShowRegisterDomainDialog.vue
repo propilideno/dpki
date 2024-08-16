@@ -6,92 +6,86 @@
     :position="$q.screen.gt.xs ? 'standard' : 'bottom'"
   >
     <q-card class="medium-dialog">
-      <q-form @submit="onSubmit">
-        <q-card-section class="row no-wrap">
-          <div class="full-width-flex">
-            <div class="text-h6 text-grey-9 flex items-center full-height">
-              Show Domain
-            </div>
+      <q-card-section class="row no-wrap">
+        <div class="full-width-flex">
+          <div class="text-h6 text-grey-9 flex items-center full-height">
+            Show Register Domain
           </div>
-        </q-card-section>
-        <q-separator />
-        <q-card-section>
-          <div class="row q-col-gutter-md">
-            <div class="col-12">
-              <q-input
-                v-model="hashParams.message"
-                label="Message *"
-                filled
-              />
-            </div>
-            <div class="col-12">
-              <q-input
-                v-model="hashParams.key"
-                label="Key *"
-                filled
-                autogrow
-              />
-            </div>
-            <div class="col-12">
-              <q-input
-                v-model="hash"
-                label="Hash"
-                autogrow
-                readonly
-                filled
-                input-class="text-caption"
+        </div>
+      </q-card-section>
+      <q-separator />
+      <q-card-section>
+        <div class="row q-col-gutter-md">
+          <div class="col-12">
+            <q-input
+              @update:model-value="onUpdateDomain"
+              :model-value="domainData.domain"
+              label="Domain *"
+              debounce="1000"
+              :loading="domainLoading"
+            >
+              <template #append>
+                <q-icon v-if="domainLoaded" v-bind="getIconProps">
+                  <q-tooltip class="text-subtitle2">
+                    {{ getIconProps.tooltip }}
+                  </q-tooltip>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+          <div v-if="domainData.exists" class="col-12">
+            <q-input
+              v-model="domainData.txt"
+              label="TXT"
+              readonly
+              autogrow
+              filled
+              stack-label
+            >
+              <template #append>
+                <q-btn
+                  @click="copyTxtToClipboard(domainData.txt)"
+                  icon="content_copy"
+                  size="0.5em"
+                  round
                 >
-                  <template #append>
-                    <q-btn
-                      @click="copyKeyToClipboard(hash)"
-                      icon="content_copy"
-                      size="0.5em"
-                      round
-                    >
-                      <q-tooltip class="text-subtitle2">
-                        Copy Hash
-                      </q-tooltip>
-                    </q-btn>
-                  </template>
-                </q-input>
-            </div>
+                  <q-tooltip class="text-subtitle2">
+                    Copy TXT
+                  </q-tooltip>
+                </q-btn>
+              </template>
+            </q-input>
           </div>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn
-            @click="onCloseDialog"
-            label="Close"
-            color="grey-9"
-            padding="sm md"
-            flat
-          />
-          <q-btn
-            type="submit"
-            label="Generate"
-            color="primary"
-            text-color="white"
-            padding="sm md"
-            :loading="loading"
-          />
-        </q-card-actions>
-      </q-form>
+        </div>
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn
+          @click="onCloseDialog"
+          label="Close"
+          color="grey-9"
+          padding="sm md"
+          flat
+        />
+      </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from 'vue'
-import { useDialogPluginComponent, copyToClipboard, useQuasar } from 'quasar'
+import { defineComponent, ref, computed } from 'vue'
+import { copyToClipboard, useDialogPluginComponent, useQuasar } from 'quasar'
 import cloneDeep from 'lodash.clonedeep';
 import { api } from 'src/boot/axios';
 
-const DEFAULT_HASH_PARAMS = {
-  message: '',
-  key: '',
+const DEFAULT_DOMAIN_DATA = {
+  domain: '',
+  txt: '',
+  hash: '',
+  exists: false
 }
 
 export default defineComponent({
-  name: 'HashDialog'
+  name: 'ShowRegisterDomainDialog'
 })
 </script>
 
@@ -109,11 +103,41 @@ const onCloseDialog = () => {
 
 const $q = useQuasar()
 
-const hash = ref('')
-const hashParams = ref(cloneDeep(DEFAULT_HASH_PARAMS))
-const loading = ref(false)
+const domainData = ref(cloneDeep(DEFAULT_DOMAIN_DATA))
 
-const copyKeyToClipboard = (value) => {
+const domainLoading = ref(false)
+const domainLoaded = ref(false)
+const getDomain = async () => {
+  domainData.value.exists = false
+  domainLoaded.value = false
+
+  try {
+    domainLoading.value = true
+
+    const { data } = await api.get(`dns/${domainData.value.domain}`)
+
+    domainData.value.exists = true
+
+    Object.assign(domainData.value, data)
+  } finally {
+    domainLoading.value = false
+    domainLoaded.value = true
+  }
+}
+
+const onUpdateDomain = async (newDomain) => {
+  domainData.value.domain = newDomain
+
+  await getDomain()
+}
+
+const getIconProps = computed(() => {
+  return domainData.value.exists
+    ? { name: 'check', color: 'positive', tooltip: 'Domain exists' }
+    : { name: 'close', color: 'negative', tooltip: 'Domain doesn\'t exists'}
+})
+
+const copyTxtToClipboard = (value) => {
   copyToClipboard(value)
     .then(() => {
       $q.notify({
@@ -127,25 +151,6 @@ const copyKeyToClipboard = (value) => {
         message: 'Error on Copy.'
       })
     })
-}
-
-// TODO: adicionar rules
-
-const onSubmit = async () => {
-  hash.value = ''
-
-  try {
-    loading.value = true
-
-    const { data } = await api.get('hash', {
-      params: hashParams.value,
-    })
-
-    hash.value = data.hash
-
-  } finally {
-    loading.value = false
-  }
 }
 
 </script>
