@@ -1,7 +1,7 @@
 services:
   laravel.test:
     build:
-      context: ./backend/docker-context
+      context: ./backend
       dockerfile: Dockerfile
       args:
         WWWGROUP: '${WWWGROUP}'
@@ -16,9 +16,7 @@ services:
       LARAVEL_SAIL: 1
       XDEBUG_MODE: '${SAIL_XDEBUG_MODE}'
       XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG}'
-      IGNITION_LOCAL_SITES_PATH: '${PWD}/backend'
-    volumes:
-      - './backend:/var/www/html'
+      IGNITION_LOCAL_SITES_PATH: '${PWD}'
     networks:
       - sail
     depends_on:
