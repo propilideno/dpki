@@ -9,44 +9,28 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      args:
-        WWWGROUP: '${WWWGROUP}'
-    image: sail-8.3/app
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    container_name: backend
     ports:
-      - '${APP_PORT}:80'
-      - '${VITE_PORT}:${VITE_PORT}'
+      - "${BACKEND_PORT}:80"
     environment:
-      WWWUSER: '${WWWUSER}'
-      LARAVEL_SAIL: 1
-      XDEBUG_MODE: '${SAIL_XDEBUG_MODE}'
-      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG}'
-      IGNITION_LOCAL_SITES_PATH: '${PWD}'
+      DB_DATABASE: '${DB_DATABASE}'
+      DB_USERNAME: '${DB_USERNAME}'
+      DB_PASSWORD: '${DB_PASSWORD}'
+      DB_HOST:     '${DB_HOST}'
     depends_on:
       - pgsql
   pgsql:
     image: 'postgres:15'
+    container_name: database
     ports:
-      - '${FORWARD_DB_PORT}:5432'
+      - '${DB_PORT}:5472'
     environment:
       PGPASSWORD: '${DB_PASSWORD}'
       POSTGRES_DB: '${DB_DATABASE}'
       POSTGRES_USER: '${DB_USERNAME}'
       POSTGRES_PASSWORD: '${DB_PASSWORD}'
     volumes:
-      - sail-pgsql:/var/lib/postgresql/data
-    healthcheck:
-      test:
-        - CMD
-        - pg_isready
-        - '-q'
-        - '-d'
-        - '${DB_DATABASE}'
-        - '-U'
-        - '${DB_USERNAME}'
-      retries: 3
-      timeout: 5s
+      - db:/var/lib/postgresql/data
   blockchain:
     build:
       context: ./blockchain
@@ -55,5 +39,5 @@ services:
       - 7000:7000
 
 volumes:
-  sail-pgsql:
+  db:
     driver: local
