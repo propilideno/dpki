@@ -11,23 +11,20 @@ import (
 type SmartContract struct {
 	ContractID    string `json:"contract_id"`
 	Wallet        string `json:"wallet"`
-	Type          string `json:"type"`
-	Specification string `json:"spec"`
 	Code          Code   `json:"-"`
+}
+
+type ContractExecution struct {
+	ContractID  string    `json:"contract_id"`
+	Result      string    `json:"result"`
+	Timestamp   time.Time `json:"timestamp"`
+	Miner       string    `json:"miner"`
 }
 
 // Code interface defines the methods for a smart contract
 type Code interface {
 	Execute(blockchain *Blockchain) error
 	Validate(blockchain *Blockchain) bool
-}
-
-type ContractExecution struct {
-	ContractID  string    `json:"contract_id"`
-	ConsumedGas float64   `json:"consumed_gas"`
-	Result      string    `json:"result"`
-	Timestamp   time.Time `json:"timestamp"`
-	Miner       string    `json:"miner"`
 }
 
 // Execute calls the Execute method of the Code interface

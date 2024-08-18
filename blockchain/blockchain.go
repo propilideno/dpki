@@ -15,7 +15,8 @@ import (
 )
 
 const BLOCK_REWARD_WALLET string = "Block Reward"
-const GAS_PRICE float64 = 0.1
+const TRANSACTION_FEE float64 = 0.05
+const GAS_FEE float64 = 0.1
 
 // Block represents each 'item' in the blockchain
 type Block struct {
@@ -102,8 +103,9 @@ func (bc *Blockchain) addContract(contract SmartContract) {
 // addTransaction adds a transaction to the transaction pool after validating it
 func (bc *Blockchain) addTransaction(tx Transaction) error {
 	// Validate the transaction
-	if !tx.Validate(bc) {
-		return fmt.Errorf("transaction validation failed: insufficient balance or invalid transaction")
+	isValid, errMsg := tx.Validate(bc)
+	if !isValid {
+		return fmt.Errorf("%s", errMsg)
 	}
 
 	// If valid, add the transaction to the pool
@@ -112,7 +114,7 @@ func (bc *Blockchain) addTransaction(tx Transaction) error {
 }
 
 // mineTransaction mines transactions from the transaction pool into the current block
-func (bc *Blockchain) mineTransaction() error {
+func (bc *Blockchain) mineTransaction(miner string) error {
 	if len(bc.TransactionPool) == 0 {
 		return fmt.Errorf("no transactions to mine")
 	}
@@ -121,6 +123,7 @@ func (bc *Blockchain) mineTransaction() error {
 
 	// Process the first transaction in the pool (FIFO)
 	transaction := bc.TransactionPool[0]
+	transaction.Miner = miner
 	lastBlock.Data.Transactions = append(lastBlock.Data.Transactions, transaction)
 
 	// Remove the processed transaction from the pool
@@ -147,7 +150,7 @@ func (bc *Blockchain) mineContractExecution(miner string) float64 {
 
 		// Remove the processed contract execution from the pool
 		bc.ContractExecutionPool = bc.ContractExecutionPool[1:]
-		return execpool.ConsumedGas
+		return GAS_FEE
 	}
 	return 0
 }
@@ -186,21 +189,22 @@ func (bc Blockchain) isValid() bool {
 func (bc *Blockchain) getBalance(address string) float64 {
 	balance := 0.0
 	for _, block := range bc.Chain {
-		for _, data := range block.Data.Transactions {
-			if tx := data; tx.From == address {
-				balance -= tx.Amount
+		for _, tx := range block.Data.Transactions {
+			if tx.From == address {
+				balance -= (tx.Amount + TRANSACTION_FEE)
+				if tx.Miner == address {
+					balance += TRANSACTION_FEE
+				}
 			} else if tx.To == address {
 				balance += tx.Amount
 			}
 		}
-	}
-
-	for _, history := range bc.ContractExecutionPool {
-		if history.ContractID == address {
-			balance -= history.ConsumedGas
+		for _, exec := range block.Data.ContractExecutionHistory {
+			if exec.Miner == address {
+				balance += GAS_FEE
+			}
 		}
 	}
-
 	return balance
 }
 
@@ -287,7 +291,7 @@ func main() {
 		}
 
 		// Mine the transaction
-		err := blockchain.mineTransaction()
+		err := blockchain.mineTransaction(miner)
 		if err != nil {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "No transactions to mine"})
 		}
@@ -345,8 +349,8 @@ func main() {
 	// Add new smart contract
 	app.Post("/certificate/request", func(c *fiber.Ctx) error {
 		var request struct {
-			Specification string `json:"specification"`
-			Wallet        string `json:"wallet"`
+			Certificate string `json:"certificate"`
+			Domain      string `json:"domain"`
 		}
 
 		if err := c.BodyParser(&request); err != nil {
@@ -358,21 +362,29 @@ func main() {
 			return c.Status(fiber.StatusInternalServerError).SendString("Could not generate contract ID")
 		}
 
+		wallet, err := GetPublicKeyFromCertificate(request.Certificate)
+		if err != nil { return c.Status(fiber.StatusInternalServerError).SendString("Could not extract public key from certificate") }
+
 		smartContract := SmartContract{
-			ContractID:    contractID,
-			Wallet:        request.Wallet,
-			Type:          "contract_example",
-			Specification: request.Specification,
-			Code:          &ContractCodeExample{},
+			ContractID: contractID,
+			Wallet: wallet,
+			Code:       &Certificate {
+				Wallet: wallet,
+				Domain: request.Domain,
+				Certificate: request.Certificate,
+				CreatedAt: time.Now(),
+			},
 		}
 
 		blockchain := c.Locals("blockchain").(*Blockchain)
 		blockchain.addContract(smartContract)
 
 		response := fiber.Map{
-			"message":    "Smart contract added to the current block",
-			"contractID": contractID,
-			"wallet":     smartContract.Wallet,
+			"message":    "Certificate successfully added to the current block, complete acme challenge to turn it valid.",
+			"contract_id": smartContract.ContractID,
+			"domain": request.Domain,
+			"wallet": smartContract.Wallet,
+			"certificate": request.Certificate,
 		}
 		return c.Status(fiber.StatusCreated).JSON(response)
 	})
@@ -406,11 +418,8 @@ func main() {
 
 		// Add the contract execution request to the ContractExecutionPool
 		execution := ContractExecution{
-			ContractID:  request.ContractID,
-			ConsumedGas: GAS_PRICE, // Fixed gas fee
-			Result:      "",        // Result will be set when mined
-			Miner:       "",        // Miner will be set when mined
-			Timestamp:   time.Now(),
+			ContractID: request.ContractID,
+			Timestamp:  time.Now(),
 		}
 
 		blockchain.ContractExecutionPool = append(blockchain.ContractExecutionPool, execution)
