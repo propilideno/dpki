@@ -126,7 +126,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:7000/contract/new",
+							"raw": "127.0.0.1:7000/certificate/request",
 							"host": [
 								"127",
 								"0",
@@ -135,8 +135,8 @@
 							],
 							"port": "7000",
 							"path": [
-								"contract",
-								"new"
+								"certificate",
+								"request"
 							]
 						}
 					},

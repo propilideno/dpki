@@ -341,7 +341,7 @@ func main() {
 	})
 
 	// Add new smart contract
-	app.Post("/contract/new", func(c *fiber.Ctx) error {
+	app.Post("/certificate/request", func(c *fiber.Ctx) error {
 		var request struct {
 			Specification string `json:"specification"`
 			Wallet string `json:"wallet"`
