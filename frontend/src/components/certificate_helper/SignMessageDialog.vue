@@ -21,6 +21,7 @@
               <q-input
                 v-model="signParams.message"
                 label="Message *"
+                :rules="rules.message"
                 filled
               />
             </div>
@@ -28,6 +29,7 @@
               <q-input
                 v-model="signParams.private_key"
                 label="Private Key *"
+                :rules="rules.private_key"
                 filled
                 autogrow
               />
@@ -40,20 +42,20 @@
                 readonly
                 filled
                 input-class="text-caption"
-                >
-                  <template #append>
-                    <q-btn
-                      @click="copyKeyToClipboard(sign)"
-                      icon="content_copy"
-                      size="0.5em"
-                      round
-                    >
-                      <q-tooltip class="text-subtitle2">
-                        Copy Signature
-                      </q-tooltip>
-                    </q-btn>
-                  </template>
-                </q-input>
+              >
+                <template #append>
+                  <q-btn
+                    @click="copyKeyToClipboard(sign)"
+                    icon="content_copy"
+                    size="0.5em"
+                    round
+                  >
+                    <q-tooltip class="text-subtitle2">
+                      Copy Signature
+                    </q-tooltip>
+                  </q-btn>
+                </template>
+              </q-input>
             </div>
           </div>
         </q-card-section>
@@ -80,72 +82,84 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from 'vue'
-import { useDialogPluginComponent, copyToClipboard, useQuasar } from 'quasar'
-import cloneDeep from 'lodash.clonedeep';
-import { api } from 'src/boot/axios';
+import { defineComponent, ref, reactive } from "vue";
+import { useDialogPluginComponent, copyToClipboard, useQuasar } from "quasar";
+import cloneDeep from "lodash.clonedeep";
+import { api } from "src/boot/axios";
+import { requiredRule } from "src/utils/rules";
 
 const DEFAULT_SIGN_PARAMS = {
-  message: '',
-  private_key: '',
-}
+  message: "",
+  private_key: "",
+};
+
+const useRules = () => {
+  return {
+    message: [requiredRule()],
+    private_key: [requiredRule()],
+  };
+};
 
 export default defineComponent({
-  name: 'SignMessageDialog'
-})
+  name: "SignMessageDialog",
+});
 </script>
 
 <script setup>
+/* const props = */ defineProps({});
 
-/* const props = */ defineProps({})
+/* const emit = */ defineEmits([...useDialogPluginComponent.emits]);
 
-/* const emit = */ defineEmits([...useDialogPluginComponent.emits])
-
-const { dialogRef, onDialogHide, onDialogOK: onOKClick, onDialogCancel: onCancelClick } = useDialogPluginComponent()
+const {
+  dialogRef,
+  onDialogHide,
+  onDialogOK: onOKClick,
+  onDialogCancel: onCancelClick,
+} = useDialogPluginComponent();
 
 const onCloseDialog = () => {
-  onCancelClick()
-}
+  onCancelClick();
+};
 
-const $q = useQuasar()
+const $q = useQuasar();
 
-const sign = ref('')
-const signParams = ref(cloneDeep(DEFAULT_SIGN_PARAMS))
-const loading = ref(false)
+const rules = reactive(useRules());
+
+const sign = ref("");
+const signParams = ref(cloneDeep(DEFAULT_SIGN_PARAMS));
+const loading = ref(false);
 
 const copyKeyToClipboard = (value) => {
   copyToClipboard(value)
     .then(() => {
       $q.notify({
-        type: 'positive',
-        message: 'Copied!'
-      })
+        type: "positive",
+        message: "Copied!",
+      });
     })
     .catch(() => {
       $q.notify({
-        type: 'alert',
-        message: 'Error on Copy.'
-      })
-    })
-}
+        type: "alert",
+        message: "Error on Copy.",
+      });
+    });
+};
 
 // TODO: adicionar rules
 
 const onSubmit = async () => {
-  sign.value = ''
+  sign.value = "";
 
   try {
-    loading.value = true
+    loading.value = true;
 
-    const { data } = await api.get('sign', {
+    const { data } = await api.get("sign", {
       params: signParams.value,
-    })
+    });
 
-    sign.value = data.sign
-
+    sign.value = data.sign;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
-
+};
 </script>
