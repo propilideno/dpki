@@ -34,8 +34,7 @@ class CertificateService
     {
         $privateKey = base64_decode($privateKey);
 
-        $privateKeyPem = CertificateField::PRIVATE_KEY->keyToPemFormat($privateKey);
-        $privateKeyResource = openssl_pkey_get_private($privateKeyPem);
+        $privateKeyResource = openssl_pkey_get_private($privateKey);
 
         openssl_sign($message, $signature, $privateKeyResource);
 

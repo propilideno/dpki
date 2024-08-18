@@ -17,9 +17,7 @@ class PrivateKeyRule implements ValidationRule
             $fail("The field $attribute is not a valid base64 private key.");
         }
 
-        $privateKeyPem = CertificateField::PRIVATE_KEY->keyToPemFormat($privateKey);
-
-        if (openssl_pkey_get_private($privateKeyPem) === false) {
+        if (openssl_pkey_get_private($privateKey) === false) {
             $fail("The field $attribute is not a valid private key.");
         }
     }
