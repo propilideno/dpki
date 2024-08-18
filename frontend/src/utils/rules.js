@@ -11,7 +11,7 @@ export const requiredRule = (msg, options) => {
 
   return (val) => {
     let errorMsg = typeof msg === "function" ? msg(val) : msg;
-    errorMsg ??= "O campo acima é obrigatório.";
+    errorMsg ??= "The field above is required.";
 
     if (typeof val === "string") {
       val = val.trim();
