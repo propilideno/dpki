@@ -1,11 +1,7 @@
 <template>
   <q-page class="flex flex-center" padding>
     <div class="row q-col-gutter-lg full-width">
-      <div
-        v-for="action, index in actions"
-        :key="index"
-        class="col"
-      >
+      <div v-for="(action, index) in actions" :key="index" class="col">
         <q-btn
           @click="action.onClick"
           :label="action.label"
@@ -13,7 +9,7 @@
           stack
           size="3em"
           padding="xl"
-          style="border-radius: 16px;"
+          style="border-radius: 16px"
           no-caps
           class="fit"
           color="grey-1"
@@ -25,42 +21,41 @@
 </template>
 
 <script>
-import { useQuasar } from 'quasar'
+import { useQuasar } from "quasar";
 
 export default {
-  name: 'DPKIDns',
-}
+  name: "DPKIDns",
+};
 </script>
 
 <script setup>
-import RegisterDomainDialog from 'src/components/dns/RegisterDomainDialog.vue';
-import DeleteRegisterDomainDialog from 'src/components/dns/DeleteRegisterDomainDialog.vue';
-import ShowRegisterDomainDialog from 'src/components/dns/ShowRegisterDomainDialog.vue';
+import RegisterDomainDialog from "src/components/dns/RegisterDomainDialog.vue";
+import DeleteRegisterDomainDialog from "src/components/dns/DeleteRegisterDomainDialog.vue";
+import ShowRegisterDomainDialog from "src/components/dns/ShowRegisterDomainDialog.vue";
 
-const $q = useQuasar()
+const $q = useQuasar();
 
 const openDialog = (component) => {
   $q.dialog({
-    component: component
-  })
-}
+    component: component,
+  });
+};
 
 const actions = [
   {
-    label: 'Register Domain',
-    icon: 'domain_add',
-    onClick: () => openDialog(RegisterDomainDialog)
+    label: "Manage Domain",
+    icon: "domain_add",
+    onClick: () => openDialog(RegisterDomainDialog),
   },
   {
-    label: 'Delete Register Domain',
-    icon: 'domain_disabled',
-    onClick: () => openDialog(DeleteRegisterDomainDialog)
+    label: "Delete Register Domain",
+    icon: "domain_disabled",
+    onClick: () => openDialog(DeleteRegisterDomainDialog),
   },
   {
-    label: 'Show Register Domain',
-    icon: 'domain',
-    onClick: () => openDialog(ShowRegisterDomainDialog)
+    label: "Show Register Domain",
+    icon: "domain",
+    onClick: () => openDialog(ShowRegisterDomainDialog),
   },
-]
-
+];
 </script>

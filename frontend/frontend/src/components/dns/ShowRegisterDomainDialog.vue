@@ -20,6 +20,7 @@
             <q-input
               @update:model-value="onUpdateDomain"
               :model-value="domainData.domain"
+              :rules="rules.domain"
               label="Domain *"
               debounce="1000"
               :loading="domainLoading"
@@ -49,9 +50,7 @@
                   size="0.5em"
                   round
                 >
-                  <q-tooltip class="text-subtitle2">
-                    Copy TXT
-                  </q-tooltip>
+                  <q-tooltip class="text-subtitle2"> Copy TXT </q-tooltip>
                 </q-btn>
               </template>
             </q-input>
@@ -72,85 +71,97 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from 'vue'
-import { copyToClipboard, useDialogPluginComponent, useQuasar } from 'quasar'
-import cloneDeep from 'lodash.clonedeep';
-import { api } from 'src/boot/axios';
+import { defineComponent, ref, computed, reactive } from "vue";
+import { copyToClipboard, useDialogPluginComponent, useQuasar } from "quasar";
+import cloneDeep from "lodash.clonedeep";
+import { api } from "src/boot/axios";
+import { requiredRule } from "src/utils/rules";
 
 const DEFAULT_DOMAIN_DATA = {
-  domain: '',
-  txt: '',
-  hash: '',
-  exists: false
-}
+  domain: "",
+  txt: "",
+  hash: "",
+  exists: false,
+};
+
+const useRules = () => {
+  return {
+    message: [requiredRule()],
+  };
+};
 
 export default defineComponent({
-  name: 'ShowRegisterDomainDialog'
-})
+  name: "ShowRegisterDomainDialog",
+});
 </script>
 
 <script setup>
+/* const props = */ defineProps({});
 
-/* const props = */ defineProps({})
+/* const emit = */ defineEmits([...useDialogPluginComponent.emits]);
 
-/* const emit = */ defineEmits([...useDialogPluginComponent.emits])
-
-const { dialogRef, onDialogHide, onDialogOK: onOKClick, onDialogCancel: onCancelClick } = useDialogPluginComponent()
+const {
+  dialogRef,
+  onDialogHide,
+  onDialogOK: onOKClick,
+  onDialogCancel: onCancelClick,
+} = useDialogPluginComponent();
 
 const onCloseDialog = () => {
-  onCancelClick()
-}
+  onCancelClick();
+};
 
-const $q = useQuasar()
+const $q = useQuasar();
 
-const domainData = ref(cloneDeep(DEFAULT_DOMAIN_DATA))
+const rules = reactive(useRules());
 
-const domainLoading = ref(false)
-const domainLoaded = ref(false)
+const domainData = ref(cloneDeep(DEFAULT_DOMAIN_DATA));
+
+const domainLoading = ref(false);
+const domainLoaded = ref(false);
 const getDomain = async () => {
-  domainData.value.exists = false
-  domainLoaded.value = false
+  domainData.value.exists = false;
+  domainLoaded.value = false;
 
   try {
-    domainLoading.value = true
+    domainLoading.value = true;
 
-    const { data } = await api.get(`dns/${domainData.value.domain}`)
+    const { data } = await api.get(`dns/${domainData.value.domain}`);
 
-    domainData.value.exists = true
+    domainData.value.exists = true;
 
-    Object.assign(domainData.value, data)
+    Object.assign(domainData.value, data);
   } finally {
-    domainLoading.value = false
-    domainLoaded.value = true
+    domainLoading.value = false;
+    domainLoaded.value = true;
   }
-}
+};
 
 const onUpdateDomain = async (newDomain) => {
-  domainData.value.domain = newDomain
+  domainData.value.domain = newDomain;
 
-  await getDomain()
-}
+  await getDomain();
+};
 
 const getIconProps = computed(() => {
   return domainData.value.exists
-    ? { name: 'check', color: 'positive', tooltip: 'Domain exists' }
-    : { name: 'close', color: 'negative', tooltip: 'Domain doesn\'t exists'}
-})
+    ? { name: "check", color: "positive", tooltip: "Domain exists" }
+    : { name: "close", color: "negative", tooltip: "Domain doesn't exists" };
+});
 
 const copyTxtToClipboard = (value) => {
   copyToClipboard(value)
     .then(() => {
       $q.notify({
-        type: 'positive',
-        message: 'Copied!'
-      })
+        type: "positive",
+        message: "Copied!",
+      });
     })
     .catch(() => {
       $q.notify({
-        type: 'alert',
-        message: 'Error on Copy.'
-      })
-    })
-}
-
+        type: "alert",
+        message: "Error on Copy.",
+      });
+    });
+};
 </script>

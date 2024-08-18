@@ -21,6 +21,7 @@
               <q-input
                 v-model="hashParams.message"
                 label="Message *"
+                :rules="rules.message"
                 filled
               />
             </div>
@@ -28,6 +29,7 @@
               <q-input
                 v-model="hashParams.key"
                 label="Key *"
+                :rules="rules.key"
                 filled
                 autogrow
               />
@@ -40,20 +42,18 @@
                 readonly
                 filled
                 input-class="text-caption"
-                >
-                  <template #append>
-                    <q-btn
-                      @click="copyKeyToClipboard(hash)"
-                      icon="content_copy"
-                      size="0.5em"
-                      round
-                    >
-                      <q-tooltip class="text-subtitle2">
-                        Copy Hash
-                      </q-tooltip>
-                    </q-btn>
-                  </template>
-                </q-input>
+              >
+                <template #append>
+                  <q-btn
+                    @click="copyKeyToClipboard(hash)"
+                    icon="content_copy"
+                    size="0.5em"
+                    round
+                  >
+                    <q-tooltip class="text-subtitle2"> Copy Hash </q-tooltip>
+                  </q-btn>
+                </template>
+              </q-input>
             </div>
           </div>
         </q-card-section>
@@ -80,72 +80,84 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from 'vue'
-import { useDialogPluginComponent, copyToClipboard, useQuasar } from 'quasar'
-import cloneDeep from 'lodash.clonedeep';
-import { api } from 'src/boot/axios';
+import { defineComponent, ref, reactive } from "vue";
+import { useDialogPluginComponent, copyToClipboard, useQuasar } from "quasar";
+import cloneDeep from "lodash.clonedeep";
+import { api } from "src/boot/axios";
+import { requiredRule } from "src/utils/rules";
 
 const DEFAULT_HASH_PARAMS = {
-  message: '',
-  key: '',
-}
+  message: "",
+  key: "",
+};
+
+const useRules = () => {
+  return {
+    message: [requiredRule()],
+    key: [requiredRule()],
+  };
+};
 
 export default defineComponent({
-  name: 'HashDialog'
-})
+  name: "HashDialog",
+});
 </script>
 
 <script setup>
+/* const props = */ defineProps({});
 
-/* const props = */ defineProps({})
+/* const emit = */ defineEmits([...useDialogPluginComponent.emits]);
 
-/* const emit = */ defineEmits([...useDialogPluginComponent.emits])
-
-const { dialogRef, onDialogHide, onDialogOK: onOKClick, onDialogCancel: onCancelClick } = useDialogPluginComponent()
+const {
+  dialogRef,
+  onDialogHide,
+  onDialogOK: onOKClick,
+  onDialogCancel: onCancelClick,
+} = useDialogPluginComponent();
 
 const onCloseDialog = () => {
-  onCancelClick()
-}
+  onCancelClick();
+};
 
-const $q = useQuasar()
+const $q = useQuasar();
 
-const hash = ref('')
-const hashParams = ref(cloneDeep(DEFAULT_HASH_PARAMS))
-const loading = ref(false)
+const rules = reactive(useRules());
+
+const hash = ref("");
+const hashParams = ref(cloneDeep(DEFAULT_HASH_PARAMS));
+const loading = ref(false);
 
 const copyKeyToClipboard = (value) => {
   copyToClipboard(value)
     .then(() => {
       $q.notify({
-        type: 'positive',
-        message: 'Copied!'
-      })
+        type: "positive",
+        message: "Copied!",
+      });
     })
     .catch(() => {
       $q.notify({
-        type: 'alert',
-        message: 'Error on Copy.'
-      })
-    })
-}
+        type: "alert",
+        message: "Error on Copy.",
+      });
+    });
+};
 
 // TODO: adicionar rules
 
 const onSubmit = async () => {
-  hash.value = ''
+  hash.value = "";
 
   try {
-    loading.value = true
+    loading.value = true;
 
-    const { data } = await api.get('hash', {
+    const { data } = await api.get("hash", {
       params: hashParams.value,
-    })
+    });
 
-    hash.value = data.hash
-
+    hash.value = data.hash;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
-
+};
 </script>

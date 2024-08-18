@@ -22,15 +22,13 @@
                 @update:model-value="onUpdateDomain"
                 :model-value="domainData.domain"
                 label="Domain *"
+                :rules="rules.domain"
                 debounce="1000"
                 :loading="domainLoading"
               />
             </div>
             <div v-if="domainData.exists" class="col-12">
-              <q-input
-                v-model="domainData.hash"
-                label="Hash *"
-              />
+              <q-input v-model="domainData.hash" label="Hash *" />
             </div>
           </div>
         </q-card-section>
@@ -57,90 +55,102 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import { useDialogPluginComponent, useQuasar } from 'quasar'
-import cloneDeep from 'lodash.clonedeep';
-import { api } from 'src/boot/axios';
+import { defineComponent, ref, reactive } from "vue";
+import { useDialogPluginComponent, useQuasar } from "quasar";
+import cloneDeep from "lodash.clonedeep";
+import { api } from "src/boot/axios";
+import { requiredRule } from "src/utils/rules";
 
 const DEFAULT_DOMAIN_DATA = {
-  domain: '',
-  hash: '',
-  exists: false
-}
+  domain: "",
+  hash: "",
+  exists: false,
+};
+
+const useRules = () => {
+  return {
+    domain: [requiredRule()],
+  };
+};
 
 export default defineComponent({
-  name: 'HashDialog'
-})
+  name: "HashDialog",
+});
 </script>
 
 <script setup>
+/* const props = */ defineProps({});
 
-/* const props = */ defineProps({})
+/* const emit = */ defineEmits([...useDialogPluginComponent.emits]);
 
-/* const emit = */ defineEmits([...useDialogPluginComponent.emits])
-
-const { dialogRef, onDialogHide, onDialogOK: onOKClick, onDialogCancel: onCancelClick } = useDialogPluginComponent()
+const {
+  dialogRef,
+  onDialogHide,
+  onDialogOK: onOKClick,
+  onDialogCancel: onCancelClick,
+} = useDialogPluginComponent();
 
 const onCloseDialog = () => {
-  onCancelClick()
-}
+  onCancelClick();
+};
 
-const $q = useQuasar()
+const $q = useQuasar();
 
-const domainData = ref(cloneDeep(DEFAULT_DOMAIN_DATA))
-const loading = ref(false)
+const rules = reactive(useRules());
 
-const domainLoading = ref(false)
+const domainData = ref(cloneDeep(DEFAULT_DOMAIN_DATA));
+const loading = ref(false);
+
+const domainLoading = ref(false);
 const getDomain = async () => {
-  domainData.value.exists = false
+  domainData.value.exists = false;
 
   try {
-    domainLoading.value = true
+    domainLoading.value = true;
 
-    const { data } = await api.get(`dns/${domainData.value.domain}`)
+    const { data } = await api.get(`dns/${domainData.value.domain}`);
 
-    domainData.value.exists = true
+    domainData.value.exists = true;
 
-    Object.assign(domainData.value, data)
+    Object.assign(domainData.value, data);
   } finally {
-    domainLoading.value = false
+    domainLoading.value = false;
   }
-}
+};
 
 const onUpdateDomain = async (newDomain) => {
-  domainData.value.domain = newDomain
+  domainData.value.domain = newDomain;
 
-  await getDomain()
-}
+  await getDomain();
+};
 
 const onSubmit = async () => {
   if (!domainData.value.exists) {
     $q.notify({
-      type: 'negative',
-      message: 'This domain doesn\'t exists.'
-    })
-    return
+      type: "negative",
+      message: "This domain doesn't exists.",
+    });
+    return;
   }
   try {
-    loading.value = true
+    loading.value = true;
 
     await api.patch(`dns/${domainData.value.domain}/clear-txt`, null, {
       headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'Application/json',
+        "X-Requested-With": "XMLHttpRequest",
+        "Content-Type": "Application/json",
         hash: domainData.value.hash,
-      }
-    })
+      },
+    });
 
     $q.notify({
-      type: 'positive',
-      message: 'TXT from domain sucessfully deleted.'
-    })
+      type: "positive",
+      message: "TXT from domain sucessfully deleted.",
+    });
 
-    onOKClick()
+    onOKClick();
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
-
+};
 </script>
