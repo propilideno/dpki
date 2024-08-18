@@ -16,7 +16,7 @@
       <q-separator />
       <q-card-section>
         <p>
-          Your shared key is
+          Your shared key is:
         </p>
         <div class="row q-col-gutter-md">
           <div class="col-12">

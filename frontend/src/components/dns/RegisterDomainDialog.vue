@@ -36,7 +36,11 @@
               />
             </div>
             <div v-if="domainData.exists" class="col-12">
-              <q-input v-model="domainData.hash" label="Hash *" />
+              <q-input
+                v-model="domainData.hash"
+                label="Hash *"
+                :rules="rules.hash"
+              />
             </div>
           </div>
         </q-card-section>
@@ -81,11 +85,12 @@ const useRules = () => {
   return {
     domain: [requiredRule()],
     txt: [requiredRule()],
+    hash: [requiredRule()],
   };
 };
 
 export default defineComponent({
-  name: "HashDialog",
+  name: "RegisterDomainDialog",
 });
 </script>
 
@@ -120,7 +125,21 @@ const getDomain = async () => {
   try {
     domainLoading.value = true;
 
-    const { data } = await api.get(`dns/${domainData.value.domain}`);
+    const { data } = await api.get(`dns/${domainData.value.domain}`, {
+      customErrorHandlers: {
+        404: () => {
+          $q.notify({
+            type: 'negative',
+            message: 'Inexistent domain, register a new one.'
+          })
+        },
+      },
+    });
+
+    $q.notify({
+      type: 'positive',
+      message: 'Edit an existent domain.',
+    })
 
     domainData.value.exists = true;
     submitLabel.value = "Edit";
