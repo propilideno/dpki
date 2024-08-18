@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "41c7c416-8c25-4a2e-8773-edd64c121c41",
+		"name": "Blockchain - Go",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37744995"
+	},
+	"item": [
+		{
+			"name": "View Blockchain",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:7000/chain",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "7000",
+					"path": [
+						"chain"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View Memory Pool",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:7000/memorypool",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "7000",
+					"path": [
+						"memorypool"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mine Block",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:7000/mine/block?wallet=TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBSzZDcDFlNUoyZjdpRFVsQS9EQkgzQndDUC9uazFMbmJhak5UYk90dHZtakRiSTNvSElJZHkzTG5HWFZJWGlUWnQvNlgzMkl1WXVqdmt6NHNKblg5QlVDQXdFQUFRPT0=",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "7000",
+					"path": [
+						"mine",
+						"block"
+					],
+					"query": [
+						{
+							"key": "wallet",
+							"value": "TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBSzZDcDFlNUoyZjdpRFVsQS9EQkgzQndDUC9uazFMbmJhak5UYk90dHZtakRiSTNvSElJZHkzTG5HWFZJWGlUWnQvNlgzMkl1WXVqdmt6NHNKblg5QlVDQXdFQUFRPT0="
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mine Contract",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:7000/mine/contract?wallet=TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBSzZDcDFlNUoyZjdpRFVsQS9EQkgzQndDUC9uazFMbmJhak5UYk90dHZtakRiSTNvSElJZHkzTG5HWFZJWGlUWnQvNlgzMkl1WXVqdmt6NHNKblg5QlVDQXdFQUFRPT0=",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "7000",
+					"path": [
+						"mine",
+						"contract"
+					],
+					"query": [
+						{
+							"key": "wallet",
+							"value": "TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBSzZDcDFlNUoyZjdpRFVsQS9EQkgzQndDUC9uazFMbmJhak5UYk90dHZtakRiSTNvSElJZHkzTG5HWFZJWGlUWnQvNlgzMkl1WXVqdmt6NHNKblg5QlVDQXdFQUFRPT0="
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mine Transaction",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:7000/mine/contract?wallet=TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBSzZDcDFlNUoyZjdpRFVsQS9EQkgzQndDUC9uazFMbmJhak5UYk90dHZtakRiSTNvSElJZHkzTG5HWFZJWGlUWnQvNlgzMkl1WXVqdmt6NHNKblg5QlVDQXdFQUFRPT0=",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "7000",
+					"path": [
+						"mine",
+						"contract"
+					],
+					"query": [
+						{
+							"key": "wallet",
+							"value": "TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBSzZDcDFlNUoyZjdpRFVsQS9EQkgzQndDUC9uazFMbmJhak5UYk90dHZtakRiSTNvSElJZHkzTG5HWFZJWGlUWnQvNlgzMkl1WXVqdmt6NHNKblg5QlVDQXdFQUFRPT0="
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Wallet information",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:7000/info?wallet=TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBSzZDcDFlNUoyZjdpRFVsQS9EQkgzQndDUC9uazFMbmJhak5UYk90dHZtakRiSTNvSElJZHkzTG5HWFZJWGlUWnQvNlgzMkl1WXVqdmt6NHNKblg5QlVDQXdFQUFRPT0=",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "7000",
+					"path": [
+						"info"
+					],
+					"query": [
+						{
+							"key": "wallet",
+							"value": "TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBSzZDcDFlNUoyZjdpRFVsQS9EQkgzQndDUC9uazFMbmJhak5UYk90dHZtakRiSTNvSElJZHkzTG5HWFZJWGlUWnQvNlgzMkl1WXVqdmt6NHNKblg5QlVDQXdFQUFRPT0="
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New contract spec",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"wallet\": \"TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBSzZDcDFlNUoyZjdpRFVsQS9EQkgzQndDUC9uazFMbmJhak5UYk90dHZtakRiSTNvSElJZHkzTG5HWFZJWGlUWnQvNlgzMkl1WXVqdmt6NHNKblg5QlVDQXdFQUFRPT0=\",\n    \"specification\": \"my certificate\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:7000/contract/new",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "7000",
+					"path": [
+						"contract",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request contract execution",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"contract_id\": \"fe82f89d36d18c28dac4c21fc1b4bd1b\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:7000/contract/execute",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "7000",
+					"path": [
+						"contract",
+						"execute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Money Transfer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"from\": \"TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBTGpCc3VDN2g3Zm5iTnZCdk1QYXN1UHpGQnJjQlJXdEcrYU5QaWc5V0FDeVptSjkxODVkTFF4LzUxZndnN2g5UC93V21DT05lV1gwS0xubFkzcDA5QmtDQXdFQUFRPT0=\",\n    \"to\": \"TUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBT2NxWE1sM2NSbU55eklYZGxkeFEzM1Iyc0xDUGZvdlY4Qk5VbEtIeGIxWGhZS0g0ajBQMlRGYmRzODRRQmRZUkdDbHJvNHJzSFlkays0ZWI1Z3dlMDhDQXdFQUFRPT0=\",\n    \"amount\": 8\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:7000/transaction/new",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "7000",
+					"path": [
+						"transaction",
+						"new"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
