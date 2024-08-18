@@ -11,7 +11,6 @@ import (
 
 // Certificate implements the Code interface for smart contract of type Certificates
 type Certificate struct {
-	Wallet      string    `json:"wallet"`
 	Domain      string    `json:"domain"`
 	Certificate string    `json:"string"`
 	CreatedAt   time.Time `json:"created_at"`

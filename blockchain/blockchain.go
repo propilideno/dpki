@@ -369,7 +369,6 @@ func main() {
 			ContractID: contractID,
 			Wallet: wallet,
 			Code:       &Certificate {
-				Wallet: wallet,
 				Domain: request.Domain,
 				Certificate: request.Certificate,
 				CreatedAt: time.Now(),
