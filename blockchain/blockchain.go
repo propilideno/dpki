@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 const BLOCK_REWARD_WALLET string = "Block Reward"
@@ -18,11 +19,11 @@ const GAS_PRICE float64 = 0.1
 
 // Block represents each 'item' in the blockchain
 type Block struct {
-	Data         BlockData   `json:"data"`
-	PreviousHash string      `json:"previous_hash"`
-	Hash         string      `json:"hash"`
-	Timestamp    time.Time   `json:"timestamp"`
-	Nonce        int         `json:"nonce"`
+	Data         BlockData `json:"data"`
+	PreviousHash string    `json:"previous_hash"`
+	Hash         string    `json:"hash"`
+	Timestamp    time.Time `json:"timestamp"`
+	Nonce        int       `json:"nonce"`
 }
 
 // Blockchain represents the entire chain
@@ -37,12 +38,12 @@ type Blockchain struct {
 }
 
 func (bc *Blockchain) appendNewEmptyBlock() {
-	block := Block {
+	block := Block{
 		PreviousHash: bc.getLastBlock().Hash,
-		Timestamp: time.Now(),
+		Timestamp:    time.Now(),
 	}
 	block.Hash = block.calculateHash()
-	bc.Chain = append(bc.Chain,block)
+	bc.Chain = append(bc.Chain, block)
 }
 
 func (bc Blockchain) getLastBlock() *Block {
@@ -151,14 +152,13 @@ func (bc *Blockchain) mineContractExecution(miner string) float64 {
 	return 0
 }
 
-
 func (bc *Blockchain) mineBlock(miner string) (Block, error) {
 	currentBlock := bc.getLastBlock()
 	// Determine the block reward based on the maximum coins limit
 	if bc.getMinedCoins()+bc.RewardPerBlock <= bc.MaxCoins {
 		currentBlock.Data.Transactions = append(currentBlock.Data.Transactions, Transaction{
-			From: BLOCK_REWARD_WALLET,
-			To: miner,
+			From:   BLOCK_REWARD_WALLET,
+			To:     miner,
 			Amount: bc.RewardPerBlock,
 		})
 	}
@@ -169,8 +169,6 @@ func (bc *Blockchain) mineBlock(miner string) (Block, error) {
 	// Return the mined block
 	return *currentBlock, nil
 }
-
-
 
 // isValid checks if the blockchain is valid
 func (bc Blockchain) isValid() bool {
@@ -241,6 +239,10 @@ func main() {
 		return c.Next()
 	})
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+	}))
+
 	// Mine a new block
 	app.Post("/mine/block", func(c *fiber.Ctx) error {
 		blockchain := c.Locals("blockchain").(*Blockchain)
@@ -287,7 +289,7 @@ func main() {
 		// Mine the transaction
 		err := blockchain.mineTransaction()
 		if err != nil {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{ "message": "No transactions to mine" })
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "No transactions to mine"})
 		}
 
 		response := fiber.Map{
@@ -322,7 +324,7 @@ func main() {
 			}
 			return c.Status(fiber.StatusOK).JSON(response)
 		} else {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{ "message": "No contracts to mine" })
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "No contracts to mine"})
 		}
 	})
 
@@ -344,7 +346,7 @@ func main() {
 	app.Post("/certificate/request", func(c *fiber.Ctx) error {
 		var request struct {
 			Specification string `json:"specification"`
-			Wallet string `json:"wallet"`
+			Wallet        string `json:"wallet"`
 		}
 
 		if err := c.BodyParser(&request); err != nil {
@@ -406,8 +408,8 @@ func main() {
 		execution := ContractExecution{
 			ContractID:  request.ContractID,
 			ConsumedGas: GAS_PRICE, // Fixed gas fee
-			Result:      "",  // Result will be set when mined
-			Miner:       "",  // Miner will be set when mined
+			Result:      "",        // Result will be set when mined
+			Miner:       "",        // Miner will be set when mined
 			Timestamp:   time.Now(),
 		}
 
