@@ -24,17 +24,15 @@ class CertificateService
         openssl_x509_export($certificate, $certificateOut);
 
         return [
-            CertificateField::PRIVATE_KEY->value => CertificateField::PRIVATE_KEY->formatKey($privateKeyOut),
-            CertificateField::PUBLIC_KEY->value => CertificateField::PUBLIC_KEY->formatKey($publicKey),
-            CertificateField::CERTIFICATE->value => CertificateField::CERTIFICATE->formatKey($certificateOut),
+            CertificateField::PRIVATE_KEY->value => base64_encode($privateKeyOut),
+            CertificateField::PUBLIC_KEY->value => base64_encode($publicKey),
+            CertificateField::CERTIFICATE->value => base64_encode($certificateOut),
         ];
     }
 
     public function signMessage(string $message, string $privateKey): string
     {
-        $privateKey = CertificateField::PRIVATE_KEY->removePemHeaderAndFooter($privateKey);
         $privateKey = base64_decode($privateKey);
-        $privateKey = CertificateField::PRIVATE_KEY->addPemHeaderAndFooter($privateKey);
 
         $privateKeyPem = CertificateField::PRIVATE_KEY->keyToPemFormat($privateKey);
         $privateKeyResource = openssl_pkey_get_private($privateKeyPem);

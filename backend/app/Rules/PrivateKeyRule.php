@@ -11,14 +11,11 @@ class PrivateKeyRule implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $privateKey = CertificateField::PRIVATE_KEY->removePemHeaderAndFooter($value);
-        $privateKey = base64_decode($privateKey);
+        $privateKey = base64_decode($value);
 
         if ($privateKey === false) {
             $fail("The field $attribute is not a valid base64 private key.");
         }
-
-        $privateKey = CertificateField::PRIVATE_KEY->addPemHeaderAndFooter($privateKey);
 
         $privateKeyPem = CertificateField::PRIVATE_KEY->keyToPemFormat($privateKey);
 
