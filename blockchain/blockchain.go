@@ -242,9 +242,17 @@ func main() {
 	})
 
 	// Mine a new block
-	app.Get("/mine/block", func(c *fiber.Ctx) error {
+	app.Post("/mine/block", func(c *fiber.Ctx) error {
 		blockchain := c.Locals("blockchain").(*Blockchain)
-		miner := c.Query("wallet")
+		var request struct {
+			Wallet string `json:"wallet"`
+		}
+		// Parse the request body
+		if err := c.BodyParser(&request); err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid input")
+		}
+
+		miner := request.Wallet
 		if miner == "" {
 			return c.Status(fiber.StatusBadRequest).SendString("Missing miner wallet")
 		}
@@ -261,9 +269,17 @@ func main() {
 		return c.Status(fiber.StatusOK).JSON(response)
 	})
 
-	app.Get("/mine/transaction", func(c *fiber.Ctx) error {
+	app.Post("/mine/transaction", func(c *fiber.Ctx) error {
 		blockchain := c.Locals("blockchain").(*Blockchain)
-		miner := c.Query("wallet")
+		var request struct {
+			Wallet string `json:"wallet"`
+		}
+		// Parse the request body
+		if err := c.BodyParser(&request); err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid input")
+		}
+
+		miner := request.Wallet
 		if miner == "" {
 			return c.Status(fiber.StatusBadRequest).SendString("Missing miner wallet")
 		}
@@ -281,9 +297,17 @@ func main() {
 	})
 
 	// Mine contract executions
-	app.Get("/mine/contract", func(c *fiber.Ctx) error {
+	app.Post("/mine/contract", func(c *fiber.Ctx) error {
 		blockchain := c.Locals("blockchain").(*Blockchain)
-		miner := c.Query("wallet")
+		var request struct {
+			Wallet string `json:"wallet"`
+		}
+		// Parse the request body
+		if err := c.BodyParser(&request); err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid input")
+		}
+
+		miner := request.Wallet
 		if miner == "" {
 			return c.Status(fiber.StatusBadRequest).SendString("Missing miner wallet")
 		}
@@ -418,9 +442,10 @@ func main() {
 	})
 
 	// Get information of a wallet
-	app.Get("/info", func(c *fiber.Ctx) error {
+	app.Get("/info/:wallet", func(c *fiber.Ctx) error {
 		blockchain := c.Locals("blockchain").(*Blockchain)
-		wallet := c.Query("wallet")
+		wallet := c.Params("wallet") // Get the wallet from the URL path
+
 		response := fiber.Map{
 			"balance": blockchain.getBalance(wallet),
 		}
