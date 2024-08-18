@@ -1,1 +1,4 @@
 **keys/
+
+.quasar/
+node_modules/
