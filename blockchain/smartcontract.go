@@ -23,12 +23,12 @@ type ContractExecution struct {
 
 // Code interface defines the methods for a smart contract
 type Code interface {
-	Execute(blockchain *Blockchain) error
+	Execute(blockchain *Blockchain) (string, error)
 	Validate(blockchain *Blockchain) bool
 }
 
 // Execute calls the Execute method of the Code interface
-func (sc *SmartContract) Execute(blockchain *Blockchain) error {
+func (sc *SmartContract) Execute(blockchain *Blockchain) (string, error) {
 	return sc.Code.Execute(blockchain)
 }
 

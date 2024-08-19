@@ -7,21 +7,55 @@ import (
 	"encoding/pem"
 	"fmt"
 	"time"
+	"net/http"
+	"encoding/json"
+	"os"
 )
 
 // Certificate implements the Code interface for smart contract of type Certificates
 type Certificate struct {
+	ContractID  string    `json:"contract_id"`
 	Domain      string    `json:"domain"`
 	Certificate string    `json:"string"`
 	CreatedAt   time.Time `json:"created_at"`
 	Status      bool      `json:"status"`
 }
 
-func (sc *Certificate) Execute(blockchain *Blockchain) error {
-	// Add logic to process the smart contract of type Certificate
-	fmt.Println("Executing smart contract of type Certificate...")
-	return nil
+func (sc *Certificate) Execute(blockchain *Blockchain) (string, error) {
+	BACKEND_URL := os.Getenv("BACKEND_URL")
+	if BACKEND_URL == "" { BACKEND_URL = "http://localhost:9000/api" }
+	// Construct the URL for the DNS check
+	dnsURL := fmt.Sprintf("%s/dns/%s", BACKEND_URL,sc.Domain)
+	resp, err := http.Get(dnsURL)
+	if err != nil {
+		return "invalid", nil // Mark as invalid if the request fails
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		// If the status code is not 200, return invalid result
+		return "invalid", nil
+	}
+
+	// Parse the response
+	var dnsResponse struct {
+		ID        int       `json:"id"`
+		Domain    string    `json:"domain"`
+		TXT       string    `json:"txt"`
+		CreatedAt time.Time `json:"created_at"`
+		UpdatedAt time.Time `json:"updated_at"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&dnsResponse); err != nil {
+		return "invalid", nil // Return invalid if decoding fails
+	}
+
+	if dnsResponse.TXT == sc.ContractID {
+		sc.Status = true
+		return "valid", nil
+	}
+
+	return "invalid", nil
 }
+
 
 func (sc *Certificate) Validate(blockchain *Blockchain) bool {
 	// Add validation logic for the smart contract of type Certificate

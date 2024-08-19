@@ -183,10 +183,15 @@ func (bc *Blockchain) mineContractExecution(miner string) float64 {
 		// Process the first contract execution in the pool (FIFO)
 		execpool := bc.ContractExecutionPool[0]
 
-		// Execute the contract
+		// Execute the contract and get the result
 		contract := bc.findContractByID(execpool.ContractID)
 		if contract != nil {
-			contract.Execute(bc)
+			result, err := contract.Execute(bc)
+			if err != nil {
+				execpool.Result = fmt.Sprintf("Execution failed: %s", err.Error())
+			} else {
+				execpool.Result = result
+			}
 			execpool.Miner = miner
 			lastBlock.Data.ContractExecutionHistory = append(lastBlock.Data.ContractExecutionHistory, execpool)
 		}
@@ -412,6 +417,7 @@ func main() {
 			ContractID: contractID,
 			Wallet: wallet,
 			Code:       &Certificate {
+				ContractID: contractID,
 				Domain: request.Domain,
 				Certificate: request.Certificate,
 				CreatedAt: time.Now(),
