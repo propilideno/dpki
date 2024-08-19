@@ -26,6 +26,7 @@
 
 <script>
 import { useQuasar } from 'quasar'
+import AcmeChallengeDialog from 'src/components/certificate_manager/AcmeChallengeDialog.vue';
 import CertificateStatusDialog from 'src/components/certificate_manager/CertificateStatusDialog.vue';
 import RegisterCertificateDialog from 'src/components/certificate_manager/RegisterCertificateDialog.vue'
 
@@ -51,9 +52,9 @@ const actions = [
     onClick: () => openDialog(RegisterCertificateDialog)
   },
   {
-    label: 'Check Acme Challenge Situation',
+    label: 'Acme Challenge',
     icon: 'emoji_events',
-    onClick: () => openDialog(RegisterCertificateDialog)
+    onClick: () => openDialog(AcmeChallengeDialog)
   },
   {
     label: 'Certificate Status',

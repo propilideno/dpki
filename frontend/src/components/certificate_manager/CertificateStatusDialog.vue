@@ -110,6 +110,19 @@ const getCertificateStatus = async () => {
 
     const { data } = await blockchain.get(`certificate/status/${certificate.value}`);
     status.value = data.status ?? false;
+
+    const notifyObject = status.value
+      ? {
+        type: "positive",
+        message: "Certificate is valid.",
+      }
+      : {
+        type: "negative",
+        message: "Certificate is invalid.",
+      }
+
+    $q.notify(notifyObject);
+
   } finally {
     loading.value = false;
     statusLoaded.value = true;
