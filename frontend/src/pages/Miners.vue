@@ -3,11 +3,80 @@
     <q-form ref="formRef">
       <div class="row q-col-gutter-lg full-width">
         <div class="col-6">
-          Listagem
+          <q-list bordered class="rounded-borders q-pa-none">
+            <q-expansion-item
+              icon="swap_vert"
+              label="Transaction Pool"
+              default-opened
+            >
+              <q-card>
+                <q-card-section>
+                  <q-list separator>
+                    <q-item>
+                      <q-item-section>
+                        <q-item-label>
+                          From
+                        </q-item-label>
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>
+                          To
+                        </q-item-label>
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label class="text-center">
+                          Amount
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item v-if="memoryPoolLoading">
+                      <q-item-section>
+                        <q-item-label class="text-center">
+                          <q-spinner
+                            color="primary"
+                            size="2em"
+                          />
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item v-else-if="memoryPool.transactionpool.length === 0">
+                      <q-item-section>
+                        <q-item-label caption>
+                          No transactions.
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      v-else
+                      v-for="item, index in memoryPool.transactionpool"
+                      :key="index"
+                      clickable
+                    >
+                      <q-item-section>
+                        <q-item-label lines="1">
+                          {{ item.from }}
+                        </q-item-label>
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label lines="1">
+                          {{ item.to }}
+                        </q-item-label>
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label class="text-center">
+                          {{ item.amount }}
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-card-section>
+              </q-card>
+            </q-expansion-item>
+          </q-list>
         </div>
         <div class="col-6">
-          <div class="column q-col-gutter-md">
-            <div class="col-4">
+          <div class="row q-col-gutter-md">
+            <div class="col-12">
               <q-input
                 label="Wallet *"
                 v-model="wallet"
@@ -18,7 +87,7 @@
             <div
               v-for="action, index in actions"
               :key="index"
-              class="col-4"
+              :class="action?.class ?? 'col-6'"
             >
               <q-btn
                 @click="action.onClick"
@@ -42,10 +111,17 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { requiredRule } from 'src/utils/rules';
 import { blockchain } from 'src/boot/axios';
+import cloneDeep from 'lodash.clonedeep';
+
+const DEFAULT_MEMORY_POOL = {
+  contractexecutionpool: [],
+  transactionpool: [],
+  contractpool: [],
+}
 
 export default {
   name: 'DPKICertificate',
@@ -71,6 +147,8 @@ const mineBlockchain = async (url) => {
       type: 'positive',
       message: 'Block mined sucessfully!'
     })
+
+    await getMemoryPool()
   } finally {
     loadingMine.value = false
   }
@@ -88,12 +166,36 @@ const actions = [
     onClick: () => mineBlockchain('mine/transaction')
   },
   {
-    label: 'Mine Contract',
+    label: 'Mine Contract Execution',
     icon: 'receipt_long',
-    onClick: () => mineBlockchain('mine/contract')
+    onClick: () => mineBlockchain('mine/contractexecution'),
+    class: 'col-12'
   },
 ]
 
 const wallet = ref('')
+
+const memoryPool = ref(cloneDeep(DEFAULT_MEMORY_POOL))
+
+const memoryPoolLoading = ref(false)
+const getMemoryPool = async () => {
+  memoryPool.value = cloneDeep(DEFAULT_MEMORY_POOL)
+
+  try {
+    memoryPoolLoading.value = true
+
+    const { data } = await blockchain.get('memorypool')
+
+    memoryPool.value.contractexecutionpool = data?.contractexecutionpool ?? []
+    memoryPool.value.transactionpool = data?.transactionpool ?? []
+    memoryPool.value.contractpool = data?.contractpool ?? []
+  } finally {
+    memoryPoolLoading.value = false
+  }
+}
+
+onMounted(async () => {
+  await getMemoryPool()
+})
 
 </script>

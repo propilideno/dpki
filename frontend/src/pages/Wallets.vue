@@ -26,6 +26,8 @@
 
 <script>
 import { useQuasar } from 'quasar'
+import ShowWalletDialog from 'src/components/wallets/ShowWalletDialog.vue';
+import TransferMoneyDialog from 'src/components/wallets/TransferMoneyDialog.vue';
 
 export default {
   name: 'DPKICertificate',
@@ -33,13 +35,12 @@ export default {
 </script>
 
 <script setup>
-import RegisterCertificateDialog from 'src/components/certificate_manager/RegisterCertificateDialog.vue'
 
 const $q = useQuasar()
 
-const myFunction = () => {
+const openDialog = (component) => {
   $q.dialog({
-    component: RegisterCertificateDialog
+    component
   })
 }
 
@@ -47,17 +48,12 @@ const actions = [
   {
     label: 'Show Wallet',
     icon: 'credit_card',
-    onClick: myFunction
+    onClick: () => openDialog(ShowWalletDialog)
   },
   {
     label: 'Transfer Money',
     icon: 'paid',
-    onClick: myFunction
-  },
-  {
-    label: 'Get Wallets',
-    icon: 'groups',
-    onClick: myFunction
+    onClick: () => openDialog(TransferMoneyDialog)
   },
 ]
 
