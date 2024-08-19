@@ -143,8 +143,6 @@ const copyKeyToClipboard = (value) => {
     });
 };
 
-// TODO: adicionar rules
-
 const onSubmit = async () => {
   hash.value = "";
 

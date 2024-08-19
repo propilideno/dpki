@@ -37,9 +37,9 @@ import RegisterCertificateDialog from 'src/components/certificate_manager/Regist
 
 const $q = useQuasar()
 
-const myFunction = () => {
+const openDialog = (component) => {
   $q.dialog({
-    component: RegisterCertificateDialog
+    component
   })
 }
 
@@ -47,12 +47,12 @@ const actions = [
   {
     label: 'Register Certificate',
     icon: 'verified_user',
-    onClick: myFunction
+    onClick: () => openDialog(RegisterCertificateDialog)
   },
   {
     label: 'Check Acme Challenge Situation',
     icon: 'emoji_events',
-    onClick: myFunction
+    onClick: () => openDialog(RegisterCertificateDialog)
   },
 ]
 
