@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\HashRequest;
 use App\Http\Requests\SignRequest;
+use App\Http\Requests\VerifySignatureRequest;
 use App\Services\CertificateService;
 use Illuminate\Http\JsonResponse;
 
@@ -23,6 +24,17 @@ class CertificateController extends Controller
 
         return response()->json([
             'sign' => $sign,
+        ]);
+    }
+
+    public function verifySignature(VerifySignatureRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $verify = $this->certificateService->verifySignature($data['message'], $data['sign'], $data['public_key']);
+
+        return response()->json([
+            'verify' => $verify,
         ]);
     }
 

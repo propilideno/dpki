@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/certificate/new', [CertificateController::class, 'generateCertificate']);
 Route::get('/sign', [CertificateController::class, 'signMessage']);
+Route::post('/verify', [CertificateController::class, 'verifySignature']);
 Route::get('/hash', [CertificateController::class, 'hash']);
 
 Route::get('/dns/{domain}', [DnsController::class, 'show']);

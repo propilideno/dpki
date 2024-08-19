@@ -40,4 +40,18 @@ class CertificateService
 
         return base64_encode($signature);
     }
+
+    public function verifySignature(string $message, string $sign, string $publicKey): bool
+    {
+        $publicKey = base64_decode($publicKey);
+        $sign = base64_decode($sign);
+
+        $verify = openssl_verify($message, $sign, $publicKey);
+
+        if (in_array($verify, [false, 0, -1])) {
+            return false;
+        }
+
+        return true;
+    }
 }
