@@ -1,12 +1,13 @@
 <template>
   <q-page padding>
     <q-form ref="formRef">
-      <div class="row q-col-gutter-lg full-width">
+      <div class="row q-col-gutter-lg">
         <div class="col-6">
-          <q-list bordered class="rounded-borders q-pa-none">
+          <q-list bordered class="rounded-borders q-pa-none q-mb-md">
             <q-expansion-item
               icon="swap_vert"
               label="Transaction Pool"
+              header-class="text-subtitle1"
               default-opened
             >
               <q-card>
@@ -73,6 +74,67 @@
               </q-card>
             </q-expansion-item>
           </q-list>
+          <q-list bordered class="rounded-borders q-pa-none">
+            <q-expansion-item
+              icon="swap_vert"
+              label="Contract Execution Pool"
+              header-class="text-subtitle1"
+              default-opened
+            >
+              <q-card>
+                <q-card-section>
+                  <q-list separator>
+                    <q-item>
+                      <q-item-section>
+                        <q-item-label>
+                          Timestamp
+                        </q-item-label>
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>
+                          Contract ID
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item v-if="memoryPoolLoading">
+                      <q-item-section>
+                        <q-item-label class="text-center">
+                          <q-spinner
+                            color="primary"
+                            size="2em"
+                          />
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item v-else-if="memoryPool.contractexecutionpool.length === 0">
+                      <q-item-section>
+                        <q-item-label caption>
+                          No contract executions.
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      v-else
+                      v-for="item, index in memoryPool.contractexecutionpool"
+                      :key="index"
+                      clickable
+                    >
+                      <q-item-section>
+                        <q-item-label lines="1">
+                          {{ formatDate(item.timestamp) }}
+                        </q-item-label>
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label lines="1">
+                          {{ item.contract_id }}
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-card-section>
+              </q-card>
+            </q-expansion-item>
+          </q-list>
         </div>
         <div class="col-6">
           <div class="row q-col-gutter-md">
@@ -112,7 +174,7 @@
 
 <script>
 import { onMounted, ref } from 'vue'
-import { useQuasar } from 'quasar'
+import { date, useQuasar } from 'quasar'
 import { requiredRule } from 'src/utils/rules';
 import { blockchain } from 'src/boot/axios';
 import cloneDeep from 'lodash.clonedeep';
@@ -120,7 +182,6 @@ import cloneDeep from 'lodash.clonedeep';
 const DEFAULT_MEMORY_POOL = {
   contractexecutionpool: [],
   transactionpool: [],
-  contractpool: [],
 }
 
 export default {
@@ -135,7 +196,7 @@ const $q = useQuasar()
 const formRef = ref(null)
 
 const loadingMine = ref(false)
-const mineBlockchain = async (url) => {
+const mineBlockchain = async (url, message) => {
   if (!await formRef.value?.validate()) return
 
   try {
@@ -145,7 +206,7 @@ const mineBlockchain = async (url) => {
 
     $q.notify({
       type: 'positive',
-      message: 'Block mined sucessfully!'
+      message
     })
 
     await getMemoryPool()
@@ -158,17 +219,17 @@ const actions = [
   {
     label: 'Mine Block',
     icon: 'grade',
-    onClick: () => mineBlockchain('mine/block')
+    onClick: () => mineBlockchain('mine/block', 'Block mined sucessfully.')
   },
   {
     label: 'Mine Transactions',
     icon: 'attach_money',
-    onClick: () => mineBlockchain('mine/transaction')
+    onClick: () => mineBlockchain('mine/transaction', 'Transaction mined sucessfully.')
   },
   {
     label: 'Mine Contract Execution',
     icon: 'receipt_long',
-    onClick: () => mineBlockchain('mine/contractexecution'),
+    onClick: () => mineBlockchain('mine/contract', 'Contract execution mined sucessfully.'),
     class: 'col-12'
   },
 ]
@@ -188,10 +249,13 @@ const getMemoryPool = async () => {
 
     memoryPool.value.contractexecutionpool = data?.contractexecutionpool ?? []
     memoryPool.value.transactionpool = data?.transactionpool ?? []
-    memoryPool.value.contractpool = data?.contractpool ?? []
   } finally {
     memoryPoolLoading.value = false
   }
+}
+
+const formatDate = (timestamp) => {
+  return date.formatDate(timestamp, 'YYYY-MM-DD HH:mm:ss')
 }
 
 onMounted(async () => {
