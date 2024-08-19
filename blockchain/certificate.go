@@ -66,3 +66,19 @@ func GetPublicKeyFromCertificate(base64Cert string) (string, error) {
 	return base64EncodedPEM, nil
 }
 
+// getCertificateStatus returns the status of the last contract execution for a given certificate
+func (bc *Blockchain) getCertificateStatus(base64Cert string) (bool, error) {
+	for i := len(bc.Chain) - 1; i >= 0; i-- { // Iterate over the blockchain in reverse order
+		block := bc.Chain[i]
+		for _, exec := range block.Data.ContractExecutionHistory {
+			contract := bc.findContractByID(exec.ContractID)
+			if contract != nil {
+				cert, ok := contract.Code.(*Certificate)
+				if ok && cert.Certificate == base64Cert {
+					return cert.Status, nil // Return the status of the certificate
+				}
+			}
+		}
+	}
+	return false, fmt.Errorf("certificate not found or has not been executed yet")
+}

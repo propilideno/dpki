@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -17,6 +18,45 @@ import (
 const BLOCK_REWARD_WALLET string = "Block Reward"
 const TRANSACTION_FEE float64 = 0.05
 const GAS_FEE float64 = 0.1
+
+func verifySignature(publicKey, message, signature string) (bool, error) {
+	// Prepare the verification request
+	verificationRequest := fiber.Map{
+		"public_key": publicKey,
+		"message":    message,
+		"sign":       signature,
+	}
+
+	// Make the request to the verification API
+	client := &http.Client{}
+	reqBody, err := json.Marshal(verificationRequest)
+	if err != nil {
+		return false, fmt.Errorf("failed to prepare verification request: %v", err)
+	}
+
+	req, err := http.NewRequest("POST", "http://127.0.0.1:9000/api/verify", strings.NewReader(string(reqBody)))
+	if err != nil {
+		return false, fmt.Errorf("failed to create verification request: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return false, fmt.Errorf("failed to verify signature: %v", err)
+	}
+	defer resp.Body.Close()
+
+	// Parse the verification response
+	var verifyResponse struct {
+		Verify bool `json:"verify"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&verifyResponse); err != nil {
+		return false, fmt.Errorf("failed to parse verification response: %v", err)
+	}
+
+	// Return true if verification succeeded, otherwise false
+	return verifyResponse.Verify, nil
+}
 
 // Block represents each 'item' in the blockchain
 type Block struct {
@@ -405,14 +445,27 @@ func main() {
 			return c.Status(fiber.StatusBadRequest).SendString("Missing contract ID")
 		}
 
-		fmt.Printf("Received request to execute contract ID: %s\n", request.ContractID)
-
-		blockchain := c.Locals("blockchain").(*Blockchain)
+		// Extract the signature from the Authorization header
+		signature := c.Get("Authorization")
+		if signature == "" {
+			return c.Status(fiber.StatusUnauthorized).SendString("Missing signature")
+		}
 
 		// Find the contract in the blockchain
+		blockchain := c.Locals("blockchain").(*Blockchain)
 		contract := blockchain.findContractByID(request.ContractID)
 		if contract == nil {
 			return c.Status(fiber.StatusNotFound).SendString("Contract not found")
+		}
+
+		// Verify the signature using the helper function
+		isVerified, err := verifySignature(contract.Wallet, request.ContractID, signature)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		}
+
+		if !isVerified {
+			return c.Status(fiber.StatusUnauthorized).SendString("Signature verification failed")
 		}
 
 		// Add the contract execution request to the ContractExecutionPool
@@ -458,6 +511,24 @@ func main() {
 
 		response := fiber.Map{
 			"balance": blockchain.getBalance(wallet),
+		}
+		return c.Status(fiber.StatusOK).JSON(response)
+	})
+
+	app.Get("/certificate/status/:base64cert", func(c *fiber.Ctx) error {
+		blockchain := c.Locals("blockchain").(*Blockchain)
+		base64Cert := c.Params("base64cert")
+
+		status, err := blockchain.getCertificateStatus(base64Cert)
+		if err != nil {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"message": err.Error(),
+			})
+		}
+
+		response := fiber.Map{
+			"certificate": base64Cert,
+			"status":      status,
 		}
 		return c.Status(fiber.StatusOK).JSON(response)
 	})
