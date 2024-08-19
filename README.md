@@ -14,6 +14,14 @@ To stop them, just run:
 > docker-compose down
 ```
 
+The services will be up in following ports:
+
+- **frontend:** 3000
+- **backend:** 9000
+- **blockchain:** 7000
+
+Access frontend interface in <a href="http://localhost:3000">clicking here</a>.
+
 ## Endpoints Documentation
 
 ### PHP Helper

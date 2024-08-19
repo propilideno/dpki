@@ -1,0 +1,552 @@
+{
+	"info": {
+		"_postman_id": "32916056-c864-4e51-bc8b-57b6562ad0c6",
+		"name": "DPKI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28886424"
+	},
+	"item": [
+		{
+			"name": "Certificate Helper - PHP",
+			"item": [
+				{
+					"name": "new certificate",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend_url}}/certificate/new",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"certificate",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign message",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"certificate\": \"aa\",\r\n    \"owner\": \"filipe\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend_url}}/sign?message=8d8ba747ab9d40eaaf6ff8e52415b534&private_key=lS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUJWZ0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQVVBd2dnRThBZ0VBQWtFQTF4RHNQUUFsMGtxKzg2elMKeGFoWXNURWRIbFd5TXAwZk02a2dJZGJmblIwQUZTUVZ3Mk0xVGRFdm5MeWlqeWw1QXQ4M21oZEQzYzlya1Q4MwpmYUdaYndJREFRQUJBa0J0eXR6ZmMyRGJqMzhXUlNkQTh1VjhaL2RXa2ljcndaeTVNZUVPaFhTWTd0SnlSR1JBCnFMVHR2OUlaSnRBM1BueVk2ZHFsTWdpeHF6RkhRSkt2ZWZyeEFpRUE4cnpnMGdpcVZnY3hJUGlQZnRGR2FYTHYKL2tFeDc5dGpzM1d1MVhRM1VaY0NJUURpMFFHbDVEdUM1UHdqU3hENmwwZDVYNUtrazVuMzRQQXRPRWdaUVJkQgo2UUloQUpnTHZadHllQmZZKzJvV3AvT2M3TWtDaU5ldlNMTmdyZXZzYkM0aVZNQlRBaUVBeWxIN2NWbkx4Kyt3CkJWOWhidFpnbUNDcmN3aUNqL3ppNE1OU2RNeCtEWGtDSVFDREw0b1FlLzlxNURxMHhlcDB2c25PQ3RhTTNmTUsKZ0d1bXhFbmhkclEranc9PQotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"sign"
+							],
+							"query": [
+								{
+									"key": "message",
+									"value": "8d8ba747ab9d40eaaf6ff8e52415b534"
+								},
+								{
+									"key": "private_key",
+									"value": "lS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUJWZ0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQVVBd2dnRThBZ0VBQWtFQTF4RHNQUUFsMGtxKzg2elMKeGFoWXNURWRIbFd5TXAwZk02a2dJZGJmblIwQUZTUVZ3Mk0xVGRFdm5MeWlqeWw1QXQ4M21oZEQzYzlya1Q4MwpmYUdaYndJREFRQUJBa0J0eXR6ZmMyRGJqMzhXUlNkQTh1VjhaL2RXa2ljcndaeTVNZUVPaFhTWTd0SnlSR1JBCnFMVHR2OUlaSnRBM1BueVk2ZHFsTWdpeHF6RkhRSkt2ZWZyeEFpRUE4cnpnMGdpcVZnY3hJUGlQZnRGR2FYTHYKL2tFeDc5dGpzM1d1MVhRM1VaY0NJUURpMFFHbDVEdUM1UHdqU3hENmwwZDVYNUtrazVuMzRQQXRPRWdaUVJkQgo2UUloQUpnTHZadHllQmZZKzJvV3AvT2M3TWtDaU5ldlNMTmdyZXZzYkM0aVZNQlRBaUVBeWxIN2NWbkx4Kyt3CkJWOWhidFpnbUNDcmN3aUNqL3ppNE1OU2RNeCtEWGtDSVFDREw0b1FlLzlxNURxMHhlcDB2c25PQ3RhTTNmTUsKZ0d1bXhFbmhkclEranc9PQotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg=="
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify signature",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"public_key\": \"LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZ3d0RRWUpLb1pJaHZjTkFRRUJCUUFEU3dBd1NBSkJBTmNRN0QwQUpkSkt2dk9zMHNXb1dMRXhIUjVWc2pLZApIek9wSUNIVzM1MGRBQlVrRmNOak5VM1JMNXk4b284cGVRTGZONW9YUTkzUGE1RS9OMzJobVc4Q0F3RUFBUT09Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=\",\r\n    \"message\": \"filipe.dev\",\r\n    \"sign\": \"flbgKpPpJUDMdukNwRvJ94HUbm/09CJx941+zknffAhPPnYddDipXhKzPig1e8/bQNmaRjPOTONiokLf6Oi1+Q==\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend_url}}/verify",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"verify"
+							],
+							"query": [
+								{
+									"key": "message",
+									"value": "testandio",
+									"disabled": true
+								},
+								{
+									"key": "public_key",
+									"value": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUJWQUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQVQ0d2dnRTZBZ0VBQWtFQTZoajl1M1lMTjk1c0dSemUKY3ZNeFo3dXYxRlVvYjV2b3dFbnlzTDZuaGFGdlpacGUvbjhaeW9qaUJSMExyZnYxUE9zc3E3ZmRwODRqUy8yOQpqWXpqZHdJREFRQUJBa0FyaEgvT2xIQWJiNjZhc0lJdHprVzE2ZThTd3Mza2laQW9CdGNsd2h0MFBLWmpLWVBPCnBOL1FuTHhtWkZoVWJSdDRYclJqYWk0Y1JkbEJOMlZFd3BYSkFpRUErMkM5TUFKYWtXMVlhRnRoMk83bG81dHQKS0RRdFloVDJXd3FFeFBQVW5EMENJUUR1WnVtRXpGaFhQeVorYmlUZ3ZPbm1XWnArdDZrTG9PRmZ3ZDVlZlJwMQp3d0lnY2ExMHdMSS96TVk3RmE1Rm1IbW9oWTB6RnR4SnJiSTNHa0t1ZWZhZUxpMENJQ2pJTEF4T2xKSWdPR3FLClZ2Nm04bkE0UmNpRmpJSnp1L29RaFFTdTYvYlhBaUVBanR1dDZIRlJqM2kzMURFN1Y4cnYxSkQ2K1RDR2VPa2oKY24vU2s3c2E1Vmc9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K",
+									"disabled": true
+								},
+								{
+									"key": "sign",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hash",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"certificate\": \"aa\",\r\n    \"owner\": \"filipe\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend_url}}/hash?message=filipe.dev2&key=ODdmZDJhOTc0M2M4MDQ1MGM4MTBjY2RlNzdmNjU2YTFkZTg4NWJhNzU1MTMzNGQ0Nzk1N2NkOTk2OWRhYWY3Nw==",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"hash"
+							],
+							"query": [
+								{
+									"key": "message",
+									"value": "filipe.dev2"
+								},
+								{
+									"key": "key",
+									"value": "ODdmZDJhOTc0M2M4MDQ1MGM4MTBjY2RlNzdmNjU2YTFkZTg4NWJhNzU1MTMzNGQ0Nzk1N2NkOTk2OWRhYWY3Nw=="
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dns - PHP",
+			"item": [
+				{
+					"name": "dns",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{backend_url}}/dns/filipe.dev",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"dns",
+								"filipe.dev"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dns clear txt",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "hash",
+								"value": "MmJiMzQwN2Q4YTVlZDEwY2Y5ZjkwZDg4ZjYyMThkMGQyMTUxMjMyZWY5NmM3Yzc1ODYzYmIzOGE3NDUwMWYzOA==",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{backend_url}}/dns/filipe.dev2/clear-txt",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"dns",
+								"filipe.dev2",
+								"clear-txt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dns",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "hash",
+								"value": "YjczNzc5NzZhZTBlNTIxMDk2NmMxMThkYTNjOGQzMmU5NDNjY2I3NmE0ZWVlNWY3MDQ2NWE1NzQ5YTRhYjEwOA==",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domain\": \"filipe.dev2\",\r\n    \"txt\": \"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend_url}}/dns",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"dns"
+							],
+							"query": [
+								{
+									"key": "domain",
+									"value": "filipe",
+									"disabled": true
+								},
+								{
+									"key": "txt",
+									"value": "teste txt",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blockchain - Go",
+			"item": [
+				{
+					"name": "mine transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"wallet\": \"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{blockchain_url}}/mine/transaction",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"mine",
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mine contract",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"wallet\": \"wallet\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{blockchain_url}}/mine/contract",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"mine",
+								"contract"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "chain",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{blockchain_url}}/chain",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"chain"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "memory pool",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{blockchain_url}}/memorypool",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"memorypool"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show wallet",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{blockchain_url}}/info/wallet",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"info",
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "certificate status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{blockchain_url}}/certificate/status/LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJ6akNDQVhpZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRVUZBREJGTVFzd0NRWURWUVFHRXdKQlZURVQKTUJFR0ExVUVDQXdLVTI5dFpTMVRkR0YwWlRFaE1COEdBMVVFQ2d3WVNXNTBaWEp1WlhRZ1YybGtaMmwwY3lCUQpkSGtnVEhSa01CNFhEVEkwTURneE9USXdORGN5TjFvWERUSTFNRGd4T1RJd05EY3lOMW93UlRFTE1Ba0dBMVVFCkJoTUNRVlV4RXpBUkJnTlZCQWdNQ2xOdmJXVXRVM1JoZEdVeElUQWZCZ05WQkFvTUdFbHVkR1Z5Ym1WMElGZHAKWkdkcGRITWdVSFI1SUV4MFpEQmNNQTBHQ1NxR1NJYjNEUUVCQVFVQUEwc0FNRWdDUVFDV2RXNFBrUkp3eW5UaApzM1h0dGtpK2RaM1FlUjlmcG5wb3J3Q0ZDc0FVVlFsSk1VeElTNkhFNE10dnBxOWhKVW9pa3dQSjN6dDE1MThoCmQ2RHdGUlRoQWdNQkFBR2pVekJSTUIwR0ExVWREZ1FXQkJRTHpuclgvVEVZQTJXMzBhSm9MVXJRUy9xdXVqQWYKQmdOVkhTTUVHREFXZ0JRTHpuclgvVEVZQTJXMzBhSm9MVXJRUy9xdXVqQVBCZ05WSFJNQkFmOEVCVEFEQVFILwpNQTBHQ1NxR1NJYjNEUUVCQlFVQUEwRUFkeGI1aisxajJKT1FST1FyKzlUcGV2TWczczlQclY3NUErT3Z4bGJHCkFCQVJsRitMNSt3ajhRVE8zcUdWd1BzYmVaS3FUaDdXRStJVXF5WU1SV1R4MXc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"certificate",
+								"status",
+								"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJ6akNDQVhpZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRVUZBREJGTVFzd0NRWURWUVFHRXdKQlZURVQKTUJFR0ExVUVDQXdLVTI5dFpTMVRkR0YwWlRFaE1COEdBMVVFQ2d3WVNXNTBaWEp1WlhRZ1YybGtaMmwwY3lCUQpkSGtnVEhSa01CNFhEVEkwTURneE9USXdORGN5TjFvWERUSTFNRGd4T1RJd05EY3lOMW93UlRFTE1Ba0dBMVVFCkJoTUNRVlV4RXpBUkJnTlZCQWdNQ2xOdmJXVXRVM1JoZEdVeElUQWZCZ05WQkFvTUdFbHVkR1Z5Ym1WMElGZHAKWkdkcGRITWdVSFI1SUV4MFpEQmNNQTBHQ1NxR1NJYjNEUUVCQVFVQUEwc0FNRWdDUVFDV2RXNFBrUkp3eW5UaApzM1h0dGtpK2RaM1FlUjlmcG5wb3J3Q0ZDc0FVVlFsSk1VeElTNkhFNE10dnBxOWhKVW9pa3dQSjN6dDE1MThoCmQ2RHdGUlRoQWdNQkFBR2pVekJSTUIwR0ExVWREZ1FXQkJRTHpuclgvVEVZQTJXMzBhSm9MVXJRUy9xdXVqQWYKQmdOVkhTTUVHREFXZ0JRTHpuclgvVEVZQTJXMzBhSm9MVXJRUy9xdXVqQVBCZ05WSFJNQkFmOEVCVEFEQVFILwpNQTBHQ1NxR1NJYjNEUUVCQlFVQUEwRUFkeGI1aisxajJKT1FST1FyKzlUcGV2TWczczlQclY3NUErT3Z4bGJHCkFCQVJsRitMNSt3ajhRVE8zcUdWd1BzYmVaS3FUaDdXRStJVXF5WU1SV1R4MXc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"from\": \"wallet\",\r\n    \"to\": \"b\",\r\n    \"amount\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{blockchain_url}}/transaction/new",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"transaction",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "execute contract",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "F5ZRwk6+U2w/Ie8UU120P2YBuZsCV4ODawMZQsgzQ6DUlgU5lRyYC1YJNCIvkG/oyUhDpZTCsgbsGiprFIEEpw==",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"contract_id\": \"8d8ba747ab9d40eaaf6ff8e52415b534\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{blockchain_url}}/contract/execute",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"contract",
+								"execute"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new contract",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"certificate\": \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJ6akNDQVhpZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRVUZBREJGTVFzd0NRWURWUVFHRXdKQlZURVQKTUJFR0ExVUVDQXdLVTI5dFpTMVRkR0YwWlRFaE1COEdBMVVFQ2d3WVNXNTBaWEp1WlhRZ1YybGtaMmwwY3lCUQpkSGtnVEhSa01CNFhEVEkwTURneE9URTJNVE14TlZvWERUSTFNRGd4T1RFMk1UTXhOVm93UlRFTE1Ba0dBMVVFCkJoTUNRVlV4RXpBUkJnTlZCQWdNQ2xOdmJXVXRVM1JoZEdVeElUQWZCZ05WQkFvTUdFbHVkR1Z5Ym1WMElGZHAKWkdkcGRITWdVSFI1SUV4MFpEQmNNQTBHQ1NxR1NJYjNEUUVCQVFVQUEwc0FNRWdDUVFEWEVPdzlBQ1hTU3I3egpyTkxGcUZpeE1SMGVWYkl5blI4enFTQWgxdCtkSFFBVkpCWERZelZOMFMrY3ZLS1BLWGtDM3plYUYwUGR6MnVSClB6ZDlvWmx2QWdNQkFBR2pVekJSTUIwR0ExVWREZ1FXQkJRSU5zbEUwRU5DZS9lSnp3WGxOeHNnT2tnYjZ6QWYKQmdOVkhTTUVHREFXZ0JRSU5zbEUwRU5DZS9lSnp3WGxOeHNnT2tnYjZ6QVBCZ05WSFJNQkFmOEVCVEFEQVFILwpNQTBHQ1NxR1NJYjNEUUVCQlFVQUEwRUFFWnF3VTgwR0JVYTdqWUhCdUZ3NDlLWXJHb0ZEK2U1TEkrSVhON3BwCmZXUjhUUStZcXlhMHhFQlN3VVZnRXZqdWdzUzB6a0F5THEzbUp1MUl6Y0U1WVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\",\r\n    \"domain\": \"filipe.dev\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{blockchain_url}}/certificate/request",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"certificate",
+								"request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mine block",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"wallet\": \"wallet\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{blockchain_url}}/mine/block",
+							"host": [
+								"{{blockchain_url}}"
+							],
+							"path": [
+								"mine",
+								"block"
+							],
+							"query": [
+								{
+									"key": "wallet",
+									"value": "wallet",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
