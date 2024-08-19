@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 	"net/http"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -20,6 +21,8 @@ const TRANSACTION_FEE float64 = 0.05
 const GAS_FEE float64 = 0.1
 
 func verifySignature(publicKey, message, signature string) (bool, error) {
+	BACKEND_URL := os.Getenv("BACKEND_URL")
+	if BACKEND_URL == "" { BACKEND_URL = "http://localhost:9000/api" }
 	// Prepare the verification request
 	verificationRequest := fiber.Map{
 		"public_key": publicKey,
@@ -34,7 +37,7 @@ func verifySignature(publicKey, message, signature string) (bool, error) {
 		return false, fmt.Errorf("failed to prepare verification request: %v", err)
 	}
 
-	req, err := http.NewRequest("POST", "http://127.0.0.1:9000/api/verify", strings.NewReader(string(reqBody)))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/verify",BACKEND_URL), strings.NewReader(string(reqBody)))
 	if err != nil {
 		return false, fmt.Errorf("failed to create verification request: %v", err)
 	}

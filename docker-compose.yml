@@ -47,6 +47,8 @@ services:
     container_name: blockchain
     ports:
       - 7000:7000
+    environment:
+      BACKEND_URL: ${BACKEND_URL}
 
 volumes:
   db:
