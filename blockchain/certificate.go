@@ -14,6 +14,7 @@ type Certificate struct {
 	Domain      string    `json:"domain"`
 	Certificate string    `json:"string"`
 	CreatedAt   time.Time `json:"created_at"`
+	Status      bool      `json:"status"`
 }
 
 func (sc *Certificate) Execute(blockchain *Blockchain) error {
@@ -49,13 +50,19 @@ func GetPublicKeyFromCertificate(base64Cert string) (string, error) {
 	if !ok {
 		return "", fmt.Errorf("certificate does not contain an RSA public key")
 	}
-	// Step 5: Encode the RSA public key in PKIX format
+	// Step 5: Encode the RSA public key in PEM format (PKIX format)
 	publicKeyBytes, err := x509.MarshalPKIXPublicKey(rsaPublicKey)
 	if err != nil {
 		return "", fmt.Errorf("failed to marshal public key: %w", err)
 	}
-	// Step 6: Encode the public key bytes to base64
-	base64PublicKey := base64.StdEncoding.EncodeToString(publicKeyBytes)
-	// Return the base64-encoded public key
-	return base64PublicKey, nil
+	// Step 6: Encode the public key bytes into PEM format
+	rsaPublicKeyPEM := pem.EncodeToMemory(&pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: publicKeyBytes,
+	})
+	// Step 7: Encode the entire PEM block to base64
+	base64EncodedPEM := base64.StdEncoding.EncodeToString(rsaPublicKeyPEM)
+	// Return the base64-encoded public key including PEM headers and footers
+	return base64EncodedPEM, nil
 }
+
