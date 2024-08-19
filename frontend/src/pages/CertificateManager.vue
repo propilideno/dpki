@@ -26,6 +26,8 @@
 
 <script>
 import { useQuasar } from 'quasar'
+import CertificateStatusDialog from 'src/components/certificate_manager/CertificateStatusDialog.vue';
+import RegisterCertificateDialog from 'src/components/certificate_manager/RegisterCertificateDialog.vue'
 
 export default {
   name: 'DPKICertificateManager',
@@ -33,7 +35,6 @@ export default {
 </script>
 
 <script setup>
-import RegisterCertificateDialog from 'src/components/certificate_manager/RegisterCertificateDialog.vue'
 
 const $q = useQuasar()
 
@@ -45,7 +46,7 @@ const openDialog = (component) => {
 
 const actions = [
   {
-    label: 'Register Certificate',
+    label: 'Request Certificate',
     icon: 'verified_user',
     onClick: () => openDialog(RegisterCertificateDialog)
   },
@@ -53,6 +54,11 @@ const actions = [
     label: 'Check Acme Challenge Situation',
     icon: 'emoji_events',
     onClick: () => openDialog(RegisterCertificateDialog)
+  },
+  {
+    label: 'Certificate Status',
+    icon: 'query_stats',
+    onClick: () => openDialog(CertificateStatusDialog)
   },
 ]
 

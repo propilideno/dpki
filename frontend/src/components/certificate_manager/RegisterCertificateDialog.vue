@@ -10,7 +10,7 @@
         <q-card-section class="row no-wrap">
           <div class="full-width-flex">
             <div class="text-h6 text-grey-9 flex items-center full-height">
-              Register Certificate
+              Request Certificate
             </div>
           </div>
         </q-card-section>
