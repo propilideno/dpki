@@ -80,5 +80,5 @@ func (bc *Blockchain) getCertificateStatus(base64Cert string) (bool, error) {
 			}
 		}
 	}
-	return false, fmt.Errorf("certificate not found or has not been executed yet")
+	return false, fmt.Errorf("Certificate not found or has not been executed yet")
 }
