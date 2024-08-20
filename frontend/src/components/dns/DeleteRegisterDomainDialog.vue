@@ -10,7 +10,7 @@
         <q-card-section class="row no-wrap">
           <div class="full-width-flex">
             <div class="text-h6 text-grey-9 flex items-center full-height">
-              Delete Domain
+              Delete Register Domain
             </div>
           </div>
         </q-card-section>
@@ -108,7 +108,16 @@ const getDomain = async () => {
   try {
     domainLoading.value = true;
 
-    const { data } = await api.get(`dns/${domainData.value.domain}`);
+    const { data } = await api.get(`dns/${domainData.value.domain}`, {
+      customErrorHandlers: {
+        404: () => {
+          $q.notify({
+            type: 'negative',
+            message: 'Inexistent domain, it is not possible clear its txt.'
+          })
+        }
+      }
+    });
 
     domainData.value.exists = true;
 

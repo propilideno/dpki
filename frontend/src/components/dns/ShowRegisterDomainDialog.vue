@@ -126,7 +126,16 @@ const getDomain = async () => {
   try {
     domainLoading.value = true;
 
-    const { data } = await api.get(`dns/${domainData.value.domain}`);
+    const { data } = await api.get(`dns/${domainData.value.domain}`, {
+      customErrorHandlers: {
+        404: () => {
+          $q.notify({
+            type: 'negative',
+            message: 'Inexistent domain.'
+          })
+        }
+      }
+    });
 
     domainData.value.exists = true;
 

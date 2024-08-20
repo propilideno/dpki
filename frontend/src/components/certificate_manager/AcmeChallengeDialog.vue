@@ -46,7 +46,7 @@
           />
           <q-btn
             type="submit"
-            label="Validate Certificate"
+            label="Execute Contract"
             color="primary"
             text-color="white"
             padding="sm md"
