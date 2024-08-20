@@ -51,9 +51,10 @@ func (sc *Certificate) Execute(blockchain *Blockchain) (string, error) {
 	if dnsResponse.TXT == sc.ContractID {
 		sc.Status = true
 		return "valid", nil
+	} else {
+		sc.Status = false
+		return "invalid", nil
 	}
-
-	return "invalid", nil
 }
 
 
