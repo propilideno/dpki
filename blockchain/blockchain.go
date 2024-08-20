@@ -223,7 +223,7 @@ func (bc *Blockchain) mineBlock(miner string) (Block, error) {
 
 // isValid checks if the blockchain is valid
 func (bc Blockchain) isValid() bool {
-	for i := 0; i < len(bc.Chain)-1; i++ {
+	for i := 0; i < len(bc.Chain)-2; i++ {
 		previousBlock := bc.Chain[i]
 		currentBlock := bc.Chain[i+1]
 		if currentBlock.Hash != currentBlock.calculateHash() || currentBlock.PreviousHash != previousBlock.Hash {
