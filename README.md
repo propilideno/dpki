@@ -22,6 +22,12 @@ The services will be up in following ports:
 
 Access frontend interface in <a href="http://localhost:3000">clicking here</a>.
 
+## Authentication
+
+In Blockchain actions that authentication is needed, we use openssl signature. The sign is generated from the private key and contract id.
+
+In DNS actions that authentication is needed, we use HMAC. The HMAC Hash is generated from the domain name and shared key. The shared key is generated when domain in created.
+
 ## Endpoints Documentation
 
 ### PHP Helper
