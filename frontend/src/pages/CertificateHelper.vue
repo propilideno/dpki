@@ -64,7 +64,7 @@ const actions = [
     onClick: () => openDialog(SignMessageDialog)
   },
   {
-    label: 'Hash',
+    label: 'HMAC Hash',
     icon: 'functions',
     onClick: () => openDialog(HashDialog)
   },

@@ -10,7 +10,7 @@
         <q-card-section class="row no-wrap">
           <div class="full-width-flex">
             <div class="text-h6 text-grey-9 flex items-center full-height">
-              Hash
+              HMAC Hash
             </div>
           </div>
         </q-card-section>
@@ -37,7 +37,7 @@
             <div class="col-12">
               <q-input
                 v-model="hash"
-                label="Hash"
+                label="HMAC Hash"
                 autogrow
                 readonly
                 filled
@@ -50,7 +50,7 @@
                     size="0.5em"
                     round
                   >
-                    <q-tooltip class="text-subtitle2"> Copy Hash </q-tooltip>
+                    <q-tooltip class="text-subtitle2"> Copy HMAC Hash </q-tooltip>
                   </q-btn>
                 </template>
               </q-input>
