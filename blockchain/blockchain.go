@@ -126,14 +126,14 @@ func CreateBlockchain(difficulty int, rewardPerBlock float64, maxCoins float64) 
 }
 
 func (bc *Blockchain) findContractByID(contractID string) *SmartContract {
-	for _, block := range bc.Chain {
-		for i := range block.Data.Contracts {
-			if block.Data.Contracts[i].ContractID == contractID {
-				return &block.Data.Contracts[i]
+	for i := len(bc.Chain) - 1; i >= 0; i-- {
+		block := bc.Chain[i]
+		for j := range block.Data.Contracts {
+			if block.Data.Contracts[j].ContractID == contractID {
+				return &block.Data.Contracts[j]
 			}
 		}
 	}
-	fmt.Println("Contract not found.")
 	return nil
 }
 
@@ -223,7 +223,7 @@ func (bc *Blockchain) mineBlock(miner string) (Block, error) {
 
 // isValid checks if the blockchain is valid
 func (bc Blockchain) isValid() bool {
-	for i := range bc.Chain[1:] {
+	for i := 0; i < len(bc.Chain)-1; i++ {
 		previousBlock := bc.Chain[i]
 		currentBlock := bc.Chain[i+1]
 		if currentBlock.Hash != currentBlock.calculateHash() || currentBlock.PreviousHash != previousBlock.Hash {
@@ -388,7 +388,9 @@ func main() {
 		}
 
 		blockchain := c.Locals("blockchain").(*Blockchain)
-		blockchain.addTransaction(tx)
+		if err := blockchain.addTransaction(tx); err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+		}
 
 		response := fiber.Map{"message": "Transaction added to the pool"}
 		return c.Status(fiber.StatusCreated).JSON(response)
