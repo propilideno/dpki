@@ -30,5 +30,15 @@ func (t Transaction) Validate(blockchain *Blockchain) (bool, string) {
 	if balance < t.Amount+TRANSACTION_FEE {
 		return false, "Insufficient balance to cover the transaction amount and fee"
 	}
+	var balanceInPool float64 = 0
+	for _, txp := range blockchain.TransactionPool{
+		if txp.From == t.From {
+			balanceInPool += txp.Amount
+		}
+	}
+	if balance < t.Amount+TRANSACTION_FEE+balanceInPool {
+		return false, "You have unconfirmed transactions in transaction pool that exceed your total money."
+	}
+	
 	return true, ""
 }

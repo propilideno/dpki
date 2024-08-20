@@ -240,11 +240,12 @@ func (bc *Blockchain) getBalance(address string) float64 {
 		for _, tx := range block.Data.Transactions {
 			if tx.From == address {
 				balance -= (tx.Amount + TRANSACTION_FEE)
-				if tx.Miner == address {
-					balance += TRANSACTION_FEE
-				}
 			} else if tx.To == address {
 				balance += tx.Amount
+			}
+
+			if tx.Miner == address {
+				balance += TRANSACTION_FEE
 			}
 		}
 		for _, exec := range block.Data.ContractExecutionHistory {
