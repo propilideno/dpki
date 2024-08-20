@@ -117,16 +117,7 @@ const onSubmit = async () => {
   try {
     loading.value = true;
 
-    await blockchain.post('transaction/new', transferData.value, {
-      customErrorHandlers: {
-        400: () => {
-          $q.notify({
-            type: 'negative',
-            message: 'There is no sufficient balance in source wallet.'
-          })
-        }
-      }
-    });
+    await blockchain.post('transaction/new', transferData.value);
 
     $q.notify({
       type: 'positive',

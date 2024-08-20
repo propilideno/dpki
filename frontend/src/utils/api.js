@@ -2,29 +2,35 @@ import { Notify } from "quasar"
 
 export const handleErrors = async (error, { router, store, customErrorHandlers }) => {
   const defaultErrorHandlers = {
+    400: async (data) => {
+      Notify.create({
+        type: 'negative',
+        message: data ?? data.message ?? 'Bad request.',
+      })
+    },
     401: async (data) => {
       Notify.create({
         type: 'negative',
-        message: 'Unauthorized.'
+        message: 'Unauthorized.',
       })
     },
     404: data => {
       Notify.create({
         type: 'negative',
-        message: data.message ?? 'Not found.'
+        message: data.message ?? 'Not found.',
       })
     },
     422: data => {
       const error = data.errors ? Object.values(data.errors).flat().shift() : data.message
       Notify.create({
         type: 'negative',
-        message: error ?? 'Invalid data.'
+        message: error ?? 'Invalid data.',
       })
     },
     500: (/* data */) => {
       Notify.create({
         type: 'negative',
-        message: 'Server error.'
+        message: 'Server error.',
       })
     }
   }
