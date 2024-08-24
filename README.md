@@ -1,5 +1,10 @@
 # Descentralized Public Key Infrastructure (DPKI)
 
+Students:
+
+- Filipe Gomes Arante de Souza
+- Lucas Rodrigues de Almeida
+
 ## Execution
 
 The follow command will run frontend, backend, blockchain and database containers:
